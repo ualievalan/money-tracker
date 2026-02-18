@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'core/theme/app_theme.dart';
 import 'features/welcome/presentation/welcome_screen.dart';
 import 'main_screen.dart';
+import 'features/transactions/data /transactions_storage.dart';
 
-void main() {
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await TransactionsStorage.load();
   runApp(const MoneyTrackerApp());
 }
+
 
 class MoneyTrackerApp extends StatelessWidget {
   const MoneyTrackerApp({super.key});

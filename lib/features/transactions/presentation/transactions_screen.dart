@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
-
-class TransactionsScreen extends StatelessWidget {
+import 'package:money_tracker/features/transactions/data%20/transactions_storage.dart';
+import 'package:money_tracker/features/transactions/presentation/add_expense_screen.dart';
+class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
 
   @override
+  State<TransactionsScreen> createState() => _TransactionsScreenState();
+}
+class _TransactionsScreenState extends State<TransactionsScreen> {
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    
+    final items = TransactionsStorage.getAll();
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                'Транзакции',
-                style: theme.textTheme.displayMedium,
-              ),
-              const SizedBox(height: 24),
-              
-              // Placeholder content
-              Expanded(
-                child: Center(
-                  child: Text(
-                    'Здесь будет список ваших транзакций',
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      appBar: AppBar(title: const Text('Транзакции')),
+      body: items.isEmpty
+          ? const Center(
+              child: Text('Здесь будет список ваших транзакций'),
+            )
+          : ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (_, i) {
+                final t = items[i];
+                return ListTile(
+                  title: Text('${t.amount} ₸'),
+                  subtitle: Text(t.note),
+                  trailing: Text('${t.date.day}.${t.date.month}'),
+                );
+              },
+            ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: ()  {
+          final created =  Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AddExpenseScreen()),
+          );
+
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
