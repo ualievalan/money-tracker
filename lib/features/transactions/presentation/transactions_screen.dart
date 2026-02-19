@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:money_tracker/features/transactions/data%20/transactions_storage.dart';
 import 'package:money_tracker/features/transactions/presentation/add_expense_screen.dart';
+
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
-
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
+
 class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
@@ -14,9 +15,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Транзакции')),
       body: items.isEmpty
-          ? const Center(
-              child: Text('Здесь будет список ваших транзакций'),
-            )
+          ? const Center(child: Text('Здесь будет список ваших транзакций'))
           : ListView.builder(
               itemCount: items.length,
               itemBuilder: (_, i) {
@@ -30,12 +29,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  {
-          final created =  Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddExpenseScreen()),
           );
-
         },
         child: const Icon(Icons.add),
       ),

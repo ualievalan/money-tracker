@@ -8,14 +8,14 @@ import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 ///
 /// Reads auth state from [AuthBloc] — no direct dependency on any service or
 /// repository. Navigation happens in [AppNavigator] via [BlocConsumer].
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isSignUp = false;
@@ -45,10 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/fotka.png',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/fotka.png', fit: BoxFit.cover),
           ),
           Center(
             child: SingleChildScrollView(
@@ -111,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : Text(_isSignUp ? 'Зарегистрироваться' : 'Войти'),
+                                : Text(
+                                    _isSignUp ? 'Зарегистрироваться' : 'Войти',
+                                  ),
                           ),
                         ),
                         const SizedBox(height: 12),

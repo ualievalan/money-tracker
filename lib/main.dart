@@ -5,7 +5,7 @@ import 'package:money_tracker/core/di/injection.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
-import 'package:money_tracker/features/auth/presentation/pages/login_page.dart';
+import 'package:money_tracker/features/auth/presentation/screen/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 import 'core/theme/app_theme.dart';
@@ -15,6 +15,7 @@ import 'main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await TransactionsStorage.load();
 
   // Load environment variables from .env asset.
@@ -34,11 +35,9 @@ Future<void> main() async {
 
 class MoneyTrackerApp extends StatelessWidget {
   const MoneyTrackerApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // AuthBloc is injectable — get_it resolves all its dependencies.
       create: (_) => getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
       child: MaterialApp(
         title: 'Money Tracker',
@@ -54,14 +53,12 @@ class MoneyTrackerApp extends StatelessWidget {
 
 class AppNavigator extends StatefulWidget {
   const AppNavigator({super.key});
-
   @override
   State<AppNavigator> createState() => _AppNavigatorState();
 }
 
 class _AppNavigatorState extends State<AppNavigator> {
   bool _showWelcome = true;
-
   @override
   Widget build(BuildContext context) {
     if (_showWelcome) {
@@ -85,7 +82,7 @@ class _AppNavigatorState extends State<AppNavigator> {
       },
       builder: (context, state) => switch (state) {
         AuthAuthenticated() => const MainScreen(),
-        _ => const LoginPage(),
+        _ => const LoginScreen(),
       },
     );
   }

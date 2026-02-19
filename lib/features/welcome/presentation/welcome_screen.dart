@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
 class WelcomeScreen extends StatelessWidget {
   final VoidCallback? onGetStarted;
   
   const WelcomeScreen({super.key, this.onGetStarted});
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -21,7 +19,7 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               const Spacer(),
               
-              // Main greeting
+              
               Text(
                 'Привет 👋',
                 style: theme.textTheme.displayLarge,
@@ -32,7 +30,7 @@ class WelcomeScreen extends StatelessWidget {
               
               const SizedBox(height: 16),
               
-              // Subtitle
+              
               Text(
                 'Добро пожаловать в\nMoney Tracker',
                 style: theme.textTheme.displayMedium?.copyWith(
@@ -47,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
               
               const SizedBox(height: 32),
               
-              // Description
+              
               Text(
                 'Управляйте своими финансами\nлегко и эффективно',
                 style: theme.textTheme.bodyMedium,
@@ -58,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
               
               const Spacer(),
               
-              // Get Started Button
+              
               SizedBox(
                 width: double.infinity,
                 height: 56,

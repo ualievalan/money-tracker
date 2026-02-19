@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -21,7 +19,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               
-              // Placeholder content
+              
               Expanded(
                 child: Center(
                   child: Text(

@@ -23,7 +23,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _authSub = _repository.authStateChanges.listen(
       (user) => add(const AuthEvent.authStateChanged()),
     );
-    // add(AuthSignOutRequested());
   }
 
   final SignInUseCase _signIn;

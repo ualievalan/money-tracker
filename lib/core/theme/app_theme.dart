@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class AppTheme {
-  // Apple-inspired color palette
+  
   static const Color primaryBlue = Color(0xFF007AFF);
   static const Color systemGray = Color(0xFF8E8E93);
   static const Color systemGray2 = Color(0xFFAEAEB2);
@@ -16,8 +15,7 @@ class AppTheme {
   
   static const Color cardLight = Color(0xFFF2F2F7);
   static const Color cardDark = Color(0xFF1C1C1E);
-
-  // Light Theme
+  
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -61,8 +59,7 @@ class AppTheme {
       elevation: 0,
     ),
   );
-
-  // Dark Theme
+  
   static ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
