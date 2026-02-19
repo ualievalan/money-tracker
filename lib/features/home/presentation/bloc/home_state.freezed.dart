@@ -12,16 +12,13 @@ part of 'home_state.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$HomeState {
   int get currentStep => throw _privateConstructorUsedError;
 
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,20 +41,17 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? currentStep = null}) {
-    return _then(
-      _value.copyWith(
-            currentStep: null == currentStep
-                ? _value.currentStep
-                : currentStep // ignore: cast_nullable_to_non_nullable
-                      as int,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? currentStep = null,
+  }) {
+    return _then(_value.copyWith(
+      currentStep: null == currentStep
+          ? _value.currentStep
+          : currentStep // ignore: cast_nullable_to_non_nullable
+              as int,
+    ) as $Val);
   }
 }
 
@@ -65,9 +59,8 @@ class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
 abstract class _$$HomeStateImplCopyWith<$Res>
     implements $HomeStateCopyWith<$Res> {
   factory _$$HomeStateImplCopyWith(
-    _$HomeStateImpl value,
-    $Res Function(_$HomeStateImpl) then,
-  ) = __$$HomeStateImplCopyWithImpl<$Res>;
+          _$HomeStateImpl value, $Res Function(_$HomeStateImpl) then) =
+      __$$HomeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int currentStep});
@@ -78,23 +71,20 @@ class __$$HomeStateImplCopyWithImpl<$Res>
     extends _$HomeStateCopyWithImpl<$Res, _$HomeStateImpl>
     implements _$$HomeStateImplCopyWith<$Res> {
   __$$HomeStateImplCopyWithImpl(
-    _$HomeStateImpl _value,
-    $Res Function(_$HomeStateImpl) _then,
-  ) : super(_value, _then);
+      _$HomeStateImpl _value, $Res Function(_$HomeStateImpl) _then)
+      : super(_value, _then);
 
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? currentStep = null}) {
-    return _then(
-      _$HomeStateImpl(
-        currentStep: null == currentStep
-            ? _value.currentStep
-            : currentStep // ignore: cast_nullable_to_non_nullable
-                  as int,
-      ),
-    );
+  $Res call({
+    Object? currentStep = null,
+  }) {
+    return _then(_$HomeStateImpl(
+      currentStep: null == currentStep
+          ? _value.currentStep
+          : currentStep // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
   }
 }
 
@@ -124,9 +114,7 @@ class _$HomeStateImpl implements _HomeState {
   @override
   int get hashCode => Object.hash(runtimeType, currentStep);
 
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
@@ -138,11 +126,8 @@ abstract class _HomeState implements HomeState {
 
   @override
   int get currentStep;
-
-  /// Create a copy of HomeState
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$HomeStateImplCopyWith<_$HomeStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
