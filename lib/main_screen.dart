@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'features/home/presentation/home_screen.dart';
-import 'features/transactions/presentation/transactions_screen.dart';
-
+import 'package:money_tracker/features/auth/login_page.dart';
+import 'package:money_tracker/features/home/presentation/home_screen.dart';
+import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
-
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
-
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-  
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    TransactionsScreen(),
-  ];
-
+  late final List<Widget> _screens;
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      
+      Scaffold(
+        appBar: AppBar(
+          title: const Text("Главная"),
+        ),
+        body: const HomeScreen(),
+      ),
+      const TransactionsScreen(),
+    ];
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
     return Scaffold(
       body: _screens[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: isDark 
-                  ? Colors.white.withOpacity(0.1) 
+              color: isDark
+                  ? Colors.white.withOpacity(0.1)
                   : Colors.black.withOpacity(0.1),
               width: 0.5,
             ),
