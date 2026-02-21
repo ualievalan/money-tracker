@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
+import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,6 +20,10 @@ class _MainScreenState extends State<MainScreen> {
       Scaffold(
         appBar: AppBar(title: const Text("Главная")),
         body: const HomeScreen(),
+      ),
+       Scaffold(
+        appBar: AppBar(title: const Text("Дела")),
+        body: const TasksScreen(),
       ),
       const TransactionsScreen(),
     ];
@@ -54,6 +59,9 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(Icons.home_rounded),
               label: 'Главная',
             ),
+            BottomNavigationBarItem(icon: 
+            Icon(Icons.task),label: 'Дела'),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.receipt_long_rounded),
               label: 'Транзакции',
