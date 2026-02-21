@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+<<<<<<< HEAD
 import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
+=======
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'features/home/presentation/home_screen.dart';
+import 'features/transactions/presentation/transactions_screen.dart';
+>>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+<<<<<<< HEAD
   late final List<Widget> _screens;
   @override
   void initState() {
@@ -29,22 +37,49 @@ class _MainScreenState extends State<MainScreen> {
       const TransactionsScreen(),
     ];
   }
+=======
+
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const TransactionsScreen(),
+  ];
+>>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    // Берём пользователя напрямую из Supabase
+    final user = Supabase.instance.client.auth.currentUser;
+
+    // Если пользователь не авторизован — редирект на /login
+    if (user == null) {
+      Future.microtask(() =>
+          Navigator.pushReplacementNamed(context, '/login'));
+      return const SizedBox.shrink();
+    }
+
+    // Получаем данные из userMetadata
+    final firstName = user.userMetadata?['firstName'] as String? ?? '';
+    final lastName = user.userMetadata?['lastName'] as String? ?? '';
+    final email = user.email ?? '';
+
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              color: isDark
-                  ? Colors.white.withOpacity(0.1)
-                  : Colors.black.withOpacity(0.1),
-              width: 0.5,
+      appBar: AppBar(
+        title: Text(_currentIndex == 0 ? 'Главная' : 'Транзакции'),
+      ),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            UserAccountsDrawerHeader(
+              accountName: Text('$firstName $lastName'),
+              accountEmail: Text(email),
+              currentAccountPicture: CircleAvatar(
+                child: Text(
+                  firstName.isNotEmpty ? firstName[0] : '?',
+                  style: const TextStyle(fontSize: 24),
+                ),
+              ),
             ),
+<<<<<<< HEAD
           ),
         ),
         child: AppleBottomNavBar(
@@ -56,7 +91,47 @@ class _MainScreenState extends State<MainScreen> {
               _currentIndex = index;
             });
           },
+=======
+            ListTile(
+              leading: const Icon(Icons.home_rounded),
+              title: const Text('Главная'),
+              onTap: () {
+                HapticFeedback.lightImpact();
+                setState(() => _currentIndex = 0);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.receipt_long_rounded),
+              title: const Text('Транзакции'),
+              onTap: () {
+                HapticFeedback.lightImpact();
+                setState(() => _currentIndex = 1);
+                Navigator.pop(context);
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Выйти'),
+              onTap: () async {
+                await Supabase.instance.client.auth.signOut();
+                Future.microtask(() =>
+                    Navigator.pushReplacementNamed(context, '/login'));
+              },
+            ),
+          ],
+>>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
         ),
+      ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) => setState(() => _currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Главная'),
+          BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Транзакции'),
+        ],
       ),
     );
   }
