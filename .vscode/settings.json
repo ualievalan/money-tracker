@@ -1,0 +1,26 @@
+{
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  "dart.lineLength": 80,
+  // ─── Format & save ────────────────────────────────────────────────────────
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  // ─── Общие настройки редактора ────────────────────────────────────────────
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  // ─── Flutter specific ─────────────────────────────────────────────────────
+  "dart.flutterSdkPath": null,
+  "dart.showTodos": true,
+  "dart.enableSdkFormatter": true
+}
