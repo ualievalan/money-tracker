@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "753394864653",
-    "project_id": "money-tracker-beksultan",
-    "storage_bucket": "money-tracker-beksultan.firebasestorage.app"
+    "project_number": "1086841482634",
+    "project_id": "moneytracker-9f436",
+    "storage_bucket": "moneytracker-9f436.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:753394864653:android:eeec39b9aa9049edd57b44",
+        "mobilesdk_app_id": "1:1086841482634:android:e431995098e615734d6c73",
         "android_client_info": {
-          "package_name": "com.example.money_tracker"
+          "package_name": "kz.dyace.moneytracker"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDglfLRDM8dtnsX3y6btqFX9uxgzUaUAqo"
+          "current_key": "AIzaSyCtRpw1IkrrHBDmzv8WkxzffKOqSYMG0ww"
         }
       ],
       "services": {

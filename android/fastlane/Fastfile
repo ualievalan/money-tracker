@@ -1,0 +1,128 @@
+require 'yaml'
+
+default_platform(:android)
+
+platform :android do
+  #
+  # ==== Лейн для сборки APK ====
+  #
+  desc "Собрать release APK через Flutter"
+  lane :build_release do
+    UI.message("➡️ Старт android:build_release")
+
+    # __dir__ = android/fastlane
+    project_root = File.expand_path("..", __dir__)   # android
+    flutter_root = File.expand_path("..", project_root) # корень Flutter-проекта
+
+    UI.message("Корень Flutter проекта: #{flutter_root}")
+
+    #
+    # 1) flutter pub get
+    #
+    sh("cd #{flutter_root} && flutter pub get")
+
+    #
+    # 2) BUILD_NUMBER
+    #
+    build_number = ENV['BUILD_NUMBER']
+    version_name = nil
+
+    if build_number.nil? || build_number.empty?
+      pubspec_path   = File.join(flutter_root, "pubspec.yaml")
+      pubspec        = YAML.load_file(pubspec_path)
+      version_string = pubspec["version"] # "1.0.0+1"
+
+      if version_string.nil?
+        UI.user_error!("В pubspec.yaml не найдена строка version")
+      end
+
+      version_name, build_number = version_string.split("+")
+      build_number ||= "1"
+
+      UI.message("Версия из pubspec.yaml: #{version_name}+#{build_number}")
+    else
+      UI.message("Использую BUILD_NUMBER из ENV: #{build_number}")
+    end
+
+    #
+    # 3) Генерация .env (если мы в CI)
+    #
+    supabase_url = ENV['SUPABASE_URL']
+    supabase_key = ENV['SUPABASE_ANON_KEY']
+    
+    if supabase_url && !supabase_url.empty? && supabase_key && !supabase_key.empty?
+      UI.message("➡️ Нашёл Supabase credentials в ENV, перезаписываю .env файл")
+      env_path = File.join(flutter_root, ".env")
+      File.write(env_path, "SUPABASE_URL=#{supabase_url}\nSUPABASE_ANON_KEY=#{supabase_key}\n")
+    else
+      UI.message("⚠️ SUPABASE_URL или SUPABASE_ANON_KEY не переданы в ENV, использую существующий .env")
+    end
+
+    #
+    # 4) Сборка APK
+    #
+    UI.message("➡️ Запускаю flutter build apk --release --build-number=#{build_number}")
+    
+    build_cmd = "cd #{flutter_root} && flutter build apk --release --build-number=#{build_number}"
+    sh(build_cmd)
+
+    #
+    # 5) Проверяем APK
+    #
+    apk_path = File.join(flutter_root, "build/app/outputs/flutter-apk/app-release.apk")
+    UI.message("Проверяю APK: #{apk_path}")
+
+    unless File.exist?(apk_path)
+      UI.user_error!("❌ APK не найден по пути #{apk_path}")
+    end
+
+    UI.success("✅ APK собран: #{apk_path}")
+
+    # Сохраняем путь в контекст для lane :firebase
+    Actions.lane_context[:APK_PATH] = apk_path
+  end
+
+  #
+  # ==== Лейн Firebase App Distribution ====
+  #
+  desc "Собрать и закинуть APK в Firebase App Distribution"
+  lane :firebase do
+    #
+    # 1) Сначала сборка
+    #
+    build_release
+
+    apk_path = Actions.lane_context[:APK_PATH]
+    UI.message("➡️ Отправляю APK в Firebase: #{apk_path}")
+
+    #
+    # 2) Проверка переменных окружения
+    #    Для money_tracker я захардкодил APP_ID, чтобы вам не пришлось добавлять ещё одну переменную в GitLab, 
+    #    но оставил FIREBASE_TESTER_GROUPS. Если её нет, будет группа "testers".
+    #
+    app_id = ENV["FIREBASE_APP_ID_ANDROID"] || "1:1086841482634:android:e431995098e615734d6c73"
+    tester_groups = ENV["FIREBASE_TESTER_GROUPS"] || "testers"
+
+    #
+    # 3) Путь до service account JSON
+    #    __dir__ = android/fastlane
+    #
+    service_file_path = File.expand_path("firebase-service-account.json", __dir__)
+
+    unless File.exist?(service_file_path)
+      UI.user_error!("Не найден файл учётных данных: #{service_file_path}")
+    end
+
+    #
+    # 4) Заливка в Firebase App Distribution
+    #
+    firebase_app_distribution(
+      app:                      app_id,
+      service_credentials_file: service_file_path,
+      release_notes:            ENV["RELEASE_NOTES"] || "CI/CD Auto Build",
+      apk_path:                 apk_path
+    )
+
+    UI.success("🚀 APK отправлен в Firebase App Distribution")
+  end
+end

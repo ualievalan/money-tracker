@@ -44,3 +44,32 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Fastlane — Ruby gems (не нужны в git, ставятся через bundle install)
+android/vendor/
+android/.bundle/
+
+# Fastlane — секретные ключи (никогда не коммитить!)
+android/fastlane/firebase-service-account.json
+android/fastlane/report.xml
+
+# Keystore и подписи (секреты)
+android/app/upload-keystore.jks
+android/key.properties
+
+# Firebase / Google — секретные ключи и base64 файлы
+*.json
+!pubspec.json
+firebase-deploy-key-base64*.txt
+upload-keystore-base64.txt
+google-services-base64.txt
+
+# VS Code
+.vscode/
+
+# Devtools
+devtools_options.yaml
+
+# Dockerfile (CI only, опционально)
+Dockerfile
+Dockerfile.ci
