@@ -1,0 +1,110 @@
+image: ghcr.io/cirruslabs/flutter:stable
+
+stages:
+  - dev
+  - release
+
+variables:
+  LC_ALL: "en_US.UTF-8"
+  PUB_CACHE: "$CI_PROJECT_DIR/.pub-cache"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  JAVA_TOOL_OPTIONS: "-Xmx3g -XX:MaxMetaspaceSize=512m"
+  BUILD_NUMBER: "$CI_PIPELINE_IID"
+
+cache:
+  key: "flutter-android-linux-protected"
+  paths:
+    - .pub-cache/
+    - .gradle/
+    - android/.gradle/
+
+default:
+  before_script:
+    - cd $CI_PROJECT_DIR
+    - flutter --version
+    - flutter pub get
+    - yes | sdkmanager --licenses || true
+
+# Just info job
+debug:runner-info:
+  stage: dev
+  script:
+    - uname -a
+    - which flutter || echo "flutter not in PATH"
+    - flutter --version
+    - ls -R /sdks/flutter/bin/cache/artifacts/engine || true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
+# Prepare Keystore and Google Services JSON
+prepare:keystore-and-config:
+  stage: dev
+  script:
+    - mkdir -p android/app
+
+    - |
+      if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+        echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/upload-keystore.jks
+      else
+        echo "⚠️ ANDROID_KEYSTORE_BASE64 is empty"
+      fi
+
+    - |
+      cat > android/key.properties <<EOF
+      storePassword=$ANDROID_KEYSTORE_PASSWORD
+      keyPassword=$ANDROID_KEY_PASSWORD
+      keyAlias=$ANDROID_KEY_ALIAS
+      storeFile=upload-keystore.jks
+      EOF
+
+    - |
+      if [ -n "$GOOGLE_SERVICES_JSON_BASE64" ]; then
+        echo "$GOOGLE_SERVICES_JSON_BASE64" | base64 -d > android/app/google-services.json
+      else
+        echo "ℹ️ GOOGLE_SERVICES_JSON_BASE64 is empty, skipping google-services.json"
+      fi
+  artifacts:
+    expire_in: 7 days
+    paths:
+      - android/app/upload-keystore.jks
+      - android/key.properties
+      - android/app/google-services.json
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
+
+# Build and distribute to Firebase
+release:android:
+  stage: release
+  needs: ["prepare:keystore-and-config"]
+  before_script:
+    - |
+      if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+        echo "❌ ERROR: variables SUPABASE_URL or SUPABASE_ANON_KEY missing"
+        echo "💡 Add them to GitLab CI/CD → Settings → CI/CD → Variables"
+        exit 1
+      fi
+      echo "✅ Supabase credentials checked."
+  script:
+    - cd $CI_PROJECT_DIR/android
+
+    - |
+      echo "📦 Creating fastlane/firebase-service-account.json..."
+      mkdir -p fastlane
+
+      if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" ]; then
+        echo "❌ FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 is empty, exiting."
+        exit 1
+      fi
+
+      echo "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" | base64 -d > fastlane/firebase-service-account.json
+
+    # Install dependencies required for Fastlane
+    - apt-get update && apt-get install -y ruby-full build-essential
+    - gem install bundler
+    - bundle install
+    
+    # Run Fastlane
+    - bundle exec fastlane android firebase
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
