@@ -69,7 +69,3 @@ google-services-base64.txt
 
 # Devtools
 devtools_options.yaml
-
-# Dockerfile (CI only, опционально)
-Dockerfile
-Dockerfile.ci
