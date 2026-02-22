@@ -64,8 +64,8 @@ firebase-deploy-key-base64*.txt
 upload-keystore-base64.txt
 google-services-base64.txt
 
-# VS Code
-.vscode/
+# VS Code — личные настройки запуска не коммитим, но settings.json коммитим
+.vscode/launch.json
 
 # Devtools
 devtools_options.yaml
