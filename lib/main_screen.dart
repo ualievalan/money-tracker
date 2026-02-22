@@ -43,7 +43,51 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const TransactionsScreen(),
   ];
+<<<<<<< HEAD
 >>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
+=======
+  void _showEditNameDialog() {
+  final controller = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Введите имя'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            hintText: 'Ваше имя',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final name = controller.text.trim();
+              if (name.isNotEmpty) {
+                // Сохраняем имя в Supabase
+                await Supabase.instance.client.auth.updateUser(
+                  UserAttributes(data: {'firstName': name}),
+                );
+
+                if (!mounted) return;
+
+                setState(() {}); // обновляем UI
+                Navigator.pop(context); // закрываем диалог
+              }
+            },
+            child: const Text('Сохранить'),
+          ),
+        ],
+      );
+    },
+  );
+}
+>>>>>>> be7559e (Add burger menu with editable user name)
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +96,8 @@ class _MainScreenState extends State<MainScreen> {
 
     // Если пользователь не авторизован — редирект на /login
     if (user == null) {
-      Future.microtask(() =>
-          Navigator.pushReplacementNamed(context, '/login'));
-      return const SizedBox.shrink();
-    }
+  return const SizedBox.shrink();
+}
 
     // Получаем данные из userMetadata
     final firstName = user.userMetadata?['firstName'] as String? ?? '';
@@ -110,15 +152,29 @@ class _MainScreenState extends State<MainScreen> {
                 Navigator.pop(context);
               },
             ),
+            ListTile(
+  leading: const Icon(Icons.edit),
+  title: const Text('Изменить имя'),
+  onTap: () {
+    Navigator.pop(context); // закрываем Drawer
+    _showEditNameDialog();   // вызываем диалог
+  },
+),
             const Spacer(),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Выйти'),
               onTap: () async {
-                await Supabase.instance.client.auth.signOut();
-                Future.microtask(() =>
-                    Navigator.pushReplacementNamed(context, '/login'));
-              },
+  await Supabase.instance.client.auth.signOut();
+
+  if (!mounted) return;
+
+  Navigator.pushNamedAndRemoveUntil(
+    context,
+    '/login',
+    (route) => false,
+  );
+},
             ),
           ],
 >>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
