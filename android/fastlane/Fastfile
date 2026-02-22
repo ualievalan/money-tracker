@@ -119,6 +119,7 @@ platform :android do
     firebase_app_distribution(
       app:                      app_id,
       service_credentials_file: service_file_path,
+      testers:                  ENV["FIREBASE_TESTERS"] || "bekzhandyace@gmail.com",
       release_notes:            ENV["RELEASE_NOTES"] || "CI/CD Auto Build",
       apk_path:                 apk_path
     )
