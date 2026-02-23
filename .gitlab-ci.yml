@@ -117,7 +117,7 @@ release:ios:
   tags:
     - my-mac-runner
   before_script:
-    - export PATH="$PATH:$HOME/development/flutter/bin"
+    - export PATH="/opt/homebrew/bin:$PATH:$HOME/development/flutter/bin"
     - cd $CI_PROJECT_DIR
     - flutter clean
     - flutter pub get
@@ -132,6 +132,18 @@ release:ios:
         exit 1
       fi
     - echo "$APP_STORE_API_KEY_BASE64" | base64 -d > fastlane/AuthKey_TZW43M7B7J.p8
+
+    - echo "🔥 Подготавливаю Firebase credentials..."
+    - |
+      if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" ]; then
+        echo "❌ ОШИБКА: FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 пуст, выйду с ошибкой"
+        exit 1
+      fi
+      if [ -z "$FIREBASE_APP_ID_IOS" ]; then
+        echo "❌ ОШИБКА: FIREBASE_APP_ID_IOS пуст. Добавь App ID из Firebase Console (Project Settings -> Your Apps -> iOS)"
+        exit 1
+      fi
+    - echo "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" | base64 -d > fastlane/firebase-service-account.json
     - bundle exec fastlane beta
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
