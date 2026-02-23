@@ -110,3 +110,28 @@ release:android:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
       when: manual
+
+# Сборка и заливка в TestFlight (iOS) через локальный Mac
+release:ios:
+  stage: release
+  tags:
+    - my-mac-runner
+  before_script:
+    - export PATH="$PATH:$HOME/development/flutter/bin"
+    - cd $CI_PROJECT_DIR
+    - flutter clean
+    - flutter pub get
+    - cd ios
+    - bundle install
+  script:
+    - echo "📦 Восстанавливаю App Store Connect API Key из Base64..."
+    - |
+      if [ -z "$APP_STORE_API_KEY_BASE64" ]; then
+        echo "❌ ОШИБКА: APP_STORE_API_KEY_BASE64 не задан. Создай переменную в GitLab -> Settings -> CI/CD -> Variables."
+        exit 1
+      fi
+    - echo "$APP_STORE_API_KEY_BASE64" | base64 -d > fastlane/AuthKey_TZW43M7B7J.p8
+    - bundle exec fastlane beta
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
+      when: manual
