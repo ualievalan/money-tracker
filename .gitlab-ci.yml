@@ -123,6 +123,7 @@ release:ios:
     - flutter pub get
     - cd ios
     - bundle install --path vendor/bundle
+    - pod install --repo-update
   script:
     - echo "📦 Восстанавливаю App Store Connect API Key из Base64..."
     - |
