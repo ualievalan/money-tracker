@@ -1,0 +1,2 @@
+app_identifier("kz.dyace.moneytracker") # The bundle identifier of your app
+team_id("F5LVV6D5CF") # Developer Portal Team ID
