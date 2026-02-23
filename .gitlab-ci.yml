@@ -123,6 +123,14 @@ release:ios:
     - flutter pub get
     # Генерируем release-конфиг для Flutter (без этого Xcode видит debug-режим и падает)
     - flutter build ios --config-only --release
+    # Воссоздаём .env файл из GitLab secrets (файл в .gitignore, раннер его удаляет при каждом запуске)
+    - |
+      if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+        echo "❌ ОШИБКА: SUPABASE_URL или SUPABASE_ANON_KEY не заданы в GitLab CI/CD Variables!"
+        exit 1
+      fi
+      printf "SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n" "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > $CI_PROJECT_DIR/.env
+      echo "✅ .env файл создан"
     - cd ios
     - bundle install --path vendor/bundle
     - pod install --repo-update
