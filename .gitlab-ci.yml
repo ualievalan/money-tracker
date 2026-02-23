@@ -122,8 +122,7 @@ release:ios:
     - flutter clean
     - flutter pub get
     - cd ios
-    - bundle config set --local path 'vendor/bundle'
-    - bundle install
+    - bundle install --path vendor/bundle
   script:
     - echo "📦 Восстанавливаю App Store Connect API Key из Base64..."
     - |
