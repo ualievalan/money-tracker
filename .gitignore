@@ -69,3 +69,21 @@ google-services-base64.txt
 
 # Devtools
 devtools_options.yaml
+
+# Fastlane Auth Keys & Artifacts
+ios/vendor/
+ios/.bundle/
+*.p8
+AuthKey_*.p8
+*.cer
+*.certSigningRequest
+*.p12
+*.mobileprovision
+*.ipa
+*.zip
+*.p8
+AuthKey_*.p8
+
+# Bundler local install
+vendor/bundle
+.bundle/

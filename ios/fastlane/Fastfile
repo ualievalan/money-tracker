@@ -1,0 +1,36 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    # 1. Загружаем API Key для авторизации в Apple
+    app_store_connect_api_key(
+      key_id: "TZW43M7B7J",
+      issuer_id: "3195229b-52e7-446a-8d6a-92dedd72fe6a",
+      key_filepath: "fastlane/AuthKey_TZW43M7B7J.p8",
+      in_house: false
+    )
+
+    # 2. Скачиваем Distribution сертификат (для релиза в App Store)
+    cert_id = get_certificates(
+      development: false
+    )
+    ENV["CERTIFICATE_ID"] = cert_id
+    # 3. Автоматически создаем/скачиваем Provisioning Profile (App Store)
+    get_provisioning_profile(
+      app_identifier: "kz.dyace.moneytracker"
+    )
+
+    # 4. Собираем финальный .ipa файл через Xcode, который всё правильно подпишет автоматически
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store"
+    )
+
+    # 6. Отправляем собранный ipa в TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
