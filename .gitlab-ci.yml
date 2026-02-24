@@ -122,7 +122,7 @@ release:ios:
     - flutter clean
     - flutter pub get
     # Генерируем release-конфиг для Flutter (без этого Xcode видит debug-режим и падает)
-    - flutter build ios --config-only --release
+    - flutter build ios --config-only --release --build-number=$BUILD_NUMBER
     # Воссоздаём .env файл из GitLab secrets (файл в .gitignore, раннер его удаляет при каждом запуске)
     - |
       if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
