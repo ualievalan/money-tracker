@@ -35,7 +35,6 @@ debug:runner-info:
     - ls -R /sdks/flutter/bin/cache/artifacts/engine || true
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
 
 # Подготовка keystore / google-services.json
 prepare:keystore-and-config:
