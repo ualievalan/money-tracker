@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
@@ -46,27 +47,15 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ),
         ),
-        child: BottomNavigationBar(
+        child: AppleBottomNavBar(
           currentIndex: _currentIndex,
+          isDark: true,
           onTap: (index) {
             HapticFeedback.lightImpact();
             setState(() {
               _currentIndex = index;
             });
           },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'Главная',
-            ),
-            BottomNavigationBarItem(icon: 
-            Icon(Icons.task),label: 'Дела'),
-
-            BottomNavigationBarItem(
-              icon: Icon(Icons.receipt_long_rounded),
-              label: 'Транзакции',
-            ),
-          ],
         ),
       ),
     );
