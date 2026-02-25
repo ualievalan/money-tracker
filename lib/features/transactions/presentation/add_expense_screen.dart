@@ -22,31 +22,28 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   Future<void> _save() async {
-  final amount = double.tryParse(_amountController.text);
+    final amount = double.tryParse(_amountController.text);
 
-  if (amount == null || amount <= 0) return;
+    if (amount == null || amount <= 0) return;
 
-  final item = TransactionItem(
-    id: Random().nextInt(999999).toString(),
-    amount: amount,
-    note: _noteController.text,
-    date: DateTime.now(),
-  );
+    final item = TransactionItem(
+      id: Random().nextInt(999999).toString(),
+      amount: amount,
+      note: _noteController.text,
+      date: DateTime.now(),
+    );
 
-  await TransactionsStorage.add(item);
+    await TransactionsStorage.add(item);
 
-  if (mounted) {
-    Navigator.pop(context, true);
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Добавить расход'),
-      ),
+      appBar: AppBar(title: const Text('Добавить расход')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -54,16 +51,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Сумма',
-              ),
+              decoration: const InputDecoration(labelText: 'Сумма'),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _noteController,
-              decoration: const InputDecoration(
-                labelText: 'Комментарий',
-              ),
+              decoration: const InputDecoration(labelText: 'Комментарий'),
             ),
             const Spacer(),
             SizedBox(
@@ -72,7 +65,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 onPressed: _save,
                 child: const Text('Сохранить'),
               ),
-            )
+            ),
           ],
         ),
       ),
