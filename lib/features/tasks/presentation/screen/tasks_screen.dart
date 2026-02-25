@@ -34,8 +34,6 @@ class _TasksScreenState extends State<TasksScreen> {
                   setState(() {
                     if (task["status"] == "overdue") {
                       task["status"] = "done";
-                    } else {
-                      task["status"] = "overdue";
                     }
                   });
                 },
