@@ -66,9 +66,9 @@ class AppleBottomNavBar extends StatelessWidget {
                 },
               ),
               _NavItem(
-                icon: Icons.task,
-                selectedIcon: Icons.task,
-                label: 'Дела',
+                icon: Icons.account_balance_wallet_outlined,
+                selectedIcon: Icons.account_balance_wallet,
+                label: 'Расходы',
                 index: 1,
                 isSelected: currentIndex == 1,
                 selectedColor: selectedColor,
