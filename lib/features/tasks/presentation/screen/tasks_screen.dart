@@ -9,12 +9,7 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   final List<Map<String, dynamic>> tasks = [
-    {"title": "распечатай доки ", "status": "overdue"},
-    {"title": "купи доллары", "status": "overdue"},
-    {"title": "аренда квартиры", "status": "overdue"},
-    {"title": "отмени подписку linkedin", "status": "overdue"},
-    {"title": "купи заморозку invictus", "status": "overdue"},
-    {"title": "отмени подписку spotify", "status": "done"},
+    
   ];
 
   @override
@@ -31,28 +26,10 @@ class _TasksScreenState extends State<TasksScreen> {
           final task = tasks[index];
           final isOverdue = task["status"] == "overdue";
 
-          return Dismissible(
-            key: ValueKey('${task["title"]}-$index'),
-            direction: DismissDirection.horizontal,
-            confirmDismiss: (direction) async {
-              if (direction == DismissDirection.endToStart) {
-                return true;
-              }
-
-              _showEditTaskDialog(index);
-              return false;
+          return GestureDetector(
+            onTap: (){
+               _showEditTaskDialog(index);
             },
-            onDismissed: (_) {
-              setState(() {
-                tasks.removeAt(index);
-              });
-            },
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              color: Colors.red.withValues(alpha: .2),
-              child: const Icon(Icons.delete, color: Colors.red),
-            ),
             child: ListTile(
               leading: IconButton(
                 onPressed: () {
