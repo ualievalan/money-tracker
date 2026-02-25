@@ -78,6 +78,19 @@ class AppleBottomNavBar extends StatelessWidget {
                   onTap(1);
                 },
               ),
+              _NavItem(
+                icon: Icons.account_balance_wallet_outlined,
+                selectedIcon: Icons.account_balance_wallet,
+                label: 'Расходы',
+                index: 2,
+                isSelected: currentIndex == 2,
+                selectedColor: selectedColor,
+                unselectedColor: unselectedColor,
+                onTap: () {
+                  HapticFeedback.selectionClick();
+                  onTap(2);
+                },
+              ),
             ],
           ),
         ),
