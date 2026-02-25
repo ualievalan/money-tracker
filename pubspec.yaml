@@ -52,7 +52,7 @@ flutter:
   assets:
     - assets/
     - assets/images/fotka.png
-    - .env
+
 
 flutter_launcher_icons:
   android: true
