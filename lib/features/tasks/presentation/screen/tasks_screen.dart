@@ -8,9 +8,7 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final List<Map<String, dynamic>> tasks = [
-    
-  ];
+  final List<Map<String, dynamic>> tasks = [];
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +25,8 @@ class _TasksScreenState extends State<TasksScreen> {
           final isOverdue = task["status"] == "overdue";
 
           return GestureDetector(
-            onTap: (){
-               _showEditTaskDialog(index);
+            onTap: () {
+              _showEditTaskDialog(index);
             },
             child: ListTile(
               leading: IconButton(
