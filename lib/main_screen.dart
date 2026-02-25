@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
         appBar: AppBar(title: const Text("Главная")),
         body: const HomeScreen(),
       ),
-       Scaffold(
+      Scaffold(
         appBar: AppBar(title: const Text("Дела")),
         body: const TasksScreen(),
       ),
