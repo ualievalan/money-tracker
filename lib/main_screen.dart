@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import 'package:supabase_flutter/supabase_flutter.dart';
+>>>>>>> 999d85e (Resolve merge conflict in main_screen)
 import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
@@ -43,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
     const HomeScreen(),
     const TransactionsScreen(),
   ];
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
 =======
@@ -99,6 +104,8 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 >>>>>>> d69ea23 (Сохранил изменения перед мержем main)
+=======
+>>>>>>> 999d85e (Resolve merge conflict in main_screen)
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +113,8 @@ class _MainScreenState extends State<MainScreen> {
     if (user == null) {
       return const SizedBox.shrink();
     }
-    final firstName = user.userMetadata?['firstName'] as String? ?? '';
-    final lastName = user.userMetadata?['lastName'] as String? ?? '';
-    final email = user.email ?? '';
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -134,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: AppleBottomNavBar(
           currentIndex: _currentIndex,
-          isDark: true,
+          isDark: isDark,
           onTap: (index) {
             HapticFeedback.lightImpact();
             setState(() {
@@ -187,18 +193,6 @@ class _MainScreenState extends State<MainScreen> {
           ],
 >>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
         ),
-      ),
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Главная'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Транзакции',
-          ),
-        ],
       ),
     );
   }
