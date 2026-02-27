@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-import 'package:supabase_flutter/supabase_flutter.dart';
->>>>>>> 999d85e (Resolve merge conflict in main_screen)
 import 'package:money_tracker/bottom_navigation_bar.dart';
-import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
-import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
-=======
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/home/presentation/home_screen.dart';
 import 'features/transactions/presentation/transactions_screen.dart';
->>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -24,33 +15,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
-<<<<<<< HEAD
-  late final List<Widget> _screens;
-  @override
-  void initState() {
-    super.initState();
-    _screens = [
-      Scaffold(
-        appBar: AppBar(title: const Text("Главная")),
-        body: const HomeScreen(),
-      ),
-      Scaffold(
-        appBar: AppBar(title: const Text("Дела")),
-        body: const TasksScreen(),
-      ),
-      const TransactionsScreen(),
-    ];
-  }
-=======
 
   final List<Widget> _screens = [
     const HomeScreen(),
+    const TasksScreen(),
     const TransactionsScreen(),
   ];
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
-=======
+
   void _showEditNameDialog() {
     final controller = TextEditingController();
 
@@ -78,20 +49,6 @@ class _MainScreenState extends State<MainScreen> {
 
                   if (!mounted) return;
 
-<<<<<<< HEAD
-                setState(() {}); // обновляем UI
-                Navigator.pop(context); // закрываем диалог
-              }
-            },
-            child: const Text('Сохранить'),
-          ),
-        ],
-      );
-    },
-  );
-}
->>>>>>> be7559e (Add burger menu with editable user name)
-=======
                   setState(() {});
                   Navigator.pop(context);
                 }
@@ -103,9 +60,6 @@ class _MainScreenState extends State<MainScreen> {
       },
     );
   }
->>>>>>> d69ea23 (Сохранил изменения перед мержем main)
-=======
->>>>>>> 999d85e (Resolve merge conflict in main_screen)
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +68,11 @@ class _MainScreenState extends State<MainScreen> {
       return const SizedBox.shrink();
     }
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final firstName = user.userMetadata?['firstName'] ?? '';
+    final lastName = user.userMetadata?['lastName'] ?? '';
+    final email = user.email ?? '';
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -128,26 +86,11 @@ class _MainScreenState extends State<MainScreen> {
               accountEmail: Text(email),
               currentAccountPicture: CircleAvatar(
                 child: Text(
-                  firstName.isNotEmpty
-                      ? firstName[0]
-                      : ' ', // пустой пробел вместо '?'
+                  firstName.isNotEmpty ? firstName[0] : '',
                   style: const TextStyle(fontSize: 24),
                 ),
               ),
             ),
-<<<<<<< HEAD
-          ),
-        ),
-        child: AppleBottomNavBar(
-          currentIndex: _currentIndex,
-          isDark: isDark,
-          onTap: (index) {
-            HapticFeedback.lightImpact();
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-=======
             ListTile(
               leading: const Icon(Icons.home_rounded),
               title: const Text('Главная'),
@@ -191,7 +134,29 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
           ],
->>>>>>> 8dc2aac (Исправлен MainScreen: безопасный logout и Supabase user)
+        ),
+      ),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: isDark
+                  ? Colors.white.withOpacity(0.1)
+                  : Colors.black.withOpacity(0.1),
+              width: 0.5,
+            ),
+          ),
+        ),
+        child: AppleBottomNavBar(
+          currentIndex: _currentIndex,
+          isDark: isDark,
+          onTap: (index) {
+            HapticFeedback.lightImpact();
+            setState(() {
+              _currentIndex = index;
+            });
+          },
         ),
       ),
     );
