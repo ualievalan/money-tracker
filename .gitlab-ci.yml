@@ -35,7 +35,6 @@ debug:runner-info:
     - ls -R /sdks/flutter/bin/cache/artifacts/engine || true
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
-      when: manual
 
 # Подготовка keystore / google-services.json
 prepare:keystore-and-config:
@@ -109,3 +108,52 @@ release:android:
     - fastlane android firebase
   rules:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
+      when: manual
+
+# Сборка и заливка в TestFlight (iOS) через локальный Mac
+release:ios:
+  stage: release
+  tags:
+    - my-mac-runner
+  before_script:
+    - export PATH="/opt/homebrew/bin:$PATH:$HOME/development/flutter/bin"
+    - cd $CI_PROJECT_DIR
+    - flutter clean
+    - flutter pub get
+    # Генерируем release-конфиг для Flutter (без этого Xcode видит debug-режим и падает)
+    - flutter build ios --config-only --release --build-number=$BUILD_NUMBER
+    # Воссоздаём .env файл из GitLab secrets (файл в .gitignore, раннер его удаляет при каждом запуске)
+    - |
+      if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+        echo "❌ ОШИБКА: SUPABASE_URL или SUPABASE_ANON_KEY не заданы в GitLab CI/CD Variables!"
+        exit 1
+      fi
+      printf "SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n" "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > $CI_PROJECT_DIR/.env
+      echo "✅ .env файл создан"
+    - cd ios
+    - bundle install --path vendor/bundle
+    - pod install --repo-update
+  script:
+    - echo "📦 Восстанавливаю App Store Connect API Key из Base64..."
+    - |
+      if [ -z "$APP_STORE_API_KEY_BASE64" ]; then
+        echo "❌ ОШИБКА: APP_STORE_API_KEY_BASE64 не задан. Создай переменную в GitLab -> Settings -> CI/CD -> Variables."
+        exit 1
+      fi
+    - echo "$APP_STORE_API_KEY_BASE64" | base64 -d > fastlane/AuthKey_TZW43M7B7J.p8
+
+    - echo "🔥 Подготавливаю Firebase credentials..."
+    - |
+      if [ -z "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" ]; then
+        echo "❌ ОШИБКА: FIREBASE_SERVICE_ACCOUNT_JSON_BASE64 пуст, выйду с ошибкой"
+        exit 1
+      fi
+      if [ -z "$FIREBASE_APP_ID_IOS" ]; then
+        echo "❌ ОШИБКА: FIREBASE_APP_ID_IOS пуст. Добавь App ID из Firebase Console (Project Settings -> Your Apps -> iOS)"
+        exit 1
+      fi
+    - echo "$FIREBASE_SERVICE_ACCOUNT_JSON_BASE64" | base64 -d > fastlane/firebase-service-account.json
+    - bundle exec fastlane beta
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
+      when: manual
