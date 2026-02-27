@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bottom_navigation_bar.dart';
+import 'package:money_tracker/core/theme/theme_cubit.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/home/presentation/home_screen.dart';
@@ -73,6 +75,8 @@ class _MainScreenState extends State<MainScreen> {
     final email = user.email ?? '';
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final isDarkMode =
+        context.watch<ThemeCubit>().state == ThemeMode.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -115,6 +119,15 @@ class _MainScreenState extends State<MainScreen> {
               onTap: () {
                 Navigator.pop(context);
                 _showEditNameDialog();
+              },
+            ),
+            SwitchListTile(
+              secondary: const Icon(Icons.dark_mode),
+              title: const Text('Тёмная тема'),
+              value: isDarkMode,
+              onChanged: (value) {
+                HapticFeedback.lightImpact();
+                context.read<ThemeCubit>().toggle(value);
               },
             ),
             const Spacer(),
