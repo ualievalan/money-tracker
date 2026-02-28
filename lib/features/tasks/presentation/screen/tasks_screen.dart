@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -9,6 +11,30 @@ class TasksScreen extends StatefulWidget {
 
 class _TasksScreenState extends State<TasksScreen> {
   final List<Map<String, dynamic>> tasks = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  Future<void> _loadTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('tasks');
+    if (raw == null) return;
+
+    final decoded = jsonDecode(raw) as List<dynamic>;
+    setState(() {
+      tasks
+        ..clear()
+        ..addAll(decoded.map((e) => Map<String, dynamic>.from(e)));
+    });
+  }
+
+  Future<void> _saveTasks() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('tasks', jsonEncode(tasks));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +64,7 @@ class _TasksScreenState extends State<TasksScreen> {
                       task["status"] = "overdue";
                     }
                   });
+                  _saveTasks();
                 },
                 icon: Icon(
                   task["status"] == "done"
@@ -90,6 +117,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   setState(() {
                     tasks.insert(0, {"title": text, "status": "overdue"});
                   });
+                  _saveTasks();
                 }
                 Navigator.pop(context);
               },
@@ -127,6 +155,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   setState(() {
                     tasks[index]["title"] = text;
                   });
+                  _saveTasks();
                 }
                 Navigator.pop(context);
               },
