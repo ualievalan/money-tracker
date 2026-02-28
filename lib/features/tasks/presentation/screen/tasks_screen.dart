@@ -50,41 +50,85 @@ class _TasksScreenState extends State<TasksScreen> {
           final task = tasks[index];
           final isOverdue = task["status"] == "overdue";
 
-          return GestureDetector(
-            onTap: () {
-              _showEditTaskDialog(index);
+          return Dismissible(
+            key: ValueKey('${task["title"]}-$index'),
+            direction: DismissDirection.horizontal,
+            confirmDismiss: (direction) async {
+              if (direction == DismissDirection.startToEnd) {
+                _showEditTaskDialog(index);
+                return false;
+              }
+              return await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Удалить задачу?'),
+                      content: const Text('Это действие нельзя отменить.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Отмена'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Удалить'),
+                        ),
+                      ],
+                    ),
+                  ) ??
+                  false;
             },
-            child: ListTile(
-              leading: IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (task["status"] == "overdue") {
-                      task["status"] = "done";
-                    } else {
-                      task["status"] = "overdue";
-                    }
-                  });
-                  _saveTasks();
-                },
-                icon: Icon(
-                  task["status"] == "done"
-                      ? Icons.check_circle
-                      : Icons.radio_button_unchecked,
-                  color: task["status"] == "done" ? Colors.green : Colors.grey,
+            onDismissed: (_) {
+              setState(() {
+                tasks.removeAt(index);
+              });
+              _saveTasks();
+            },
+            background: Container(
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              color: Colors.red.withValues(alpha: 0.2),
+              child: const Icon(Icons.delete, color: Colors.red),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                _showEditTaskDialog(index);
+              },
+              child: ListTile(
+                leading: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (task["status"] == "overdue") {
+                        task["status"] = "done";
+                      } else {
+                        task["status"] = "overdue";
+                      }
+                    });
+                    _saveTasks();
+                  },
+                  icon: Icon(
+                    task["status"] == "done"
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    color: task["status"] == "done"
+                        ? Colors.green
+                        : Colors.grey,
+                  ),
                 ),
-              ),
-              title: Text(
-                task["title"].toString(),
-                style: TextStyle(
-                  decoration: task["status"] == "done"
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
-                  color: task["status"] == "done" ? Colors.grey : null,
+                title: Text(
+                  task["title"].toString(),
+                  style: TextStyle(
+                    decoration: task["status"] == "done"
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    color: task["status"] == "done" ? Colors.grey : null,
+                  ),
                 ),
-              ),
-              trailing: Text(
-                isOverdue ? "Просрочено" : "Выполнено",
-                style: TextStyle(color: isOverdue ? Colors.red : Colors.green),
+                trailing: Text(
+                  isOverdue ? "Просрочено" : "Выполнено",
+                  style: TextStyle(
+                    color: isOverdue ? Colors.red : Colors.green,
+                  ),
+                ),
               ),
             ),
           );
