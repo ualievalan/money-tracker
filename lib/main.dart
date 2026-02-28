@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:money_tracker/core/di/injection.dart';
+import 'package:money_tracker/core/theme/theme_cubit.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
@@ -37,15 +38,27 @@ class MoneyTrackerApp extends StatelessWidget {
   const MoneyTrackerApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
-      child: MaterialApp(
-        title: 'Money Tracker',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.system,
-        home: const AppNavigator(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
+        ),
+        BlocProvider(
+          create: (_) => ThemeCubit(),
+        ),
+      ],
+      child: BlocBuilder<ThemeCubit, ThemeMode>(
+        builder: (context, themeMode) {
+          return MaterialApp(
+            title: 'Money Tracker',
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: themeMode,
+            home: const AppNavigator(),
+          );
+        },
       ),
     );
   }
