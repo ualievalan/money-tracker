@@ -1,10 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:money_tracker/features/transactions/domain/transaction.dart';
-import 'package:money_tracker/features/transactions/data%20/transactions_storage.dart';
+import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-  const AddExpenseScreen({super.key});
+  final TransactionItem? existing;
+  const AddExpenseScreen({super.key, this.existing});
 
   @override
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -13,6 +14,15 @@ class AddExpenseScreen extends StatefulWidget {
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existing != null) {
+      _amountController.text = widget.existing!.amount.toString();
+      _noteController.text = widget.existing!.note;
+    }
+  }
 
   @override
   void dispose() {
@@ -26,14 +36,23 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     if (amount == null || amount <= 0) return;
 
-    final item = TransactionItem(
-      id: Random().nextInt(999999).toString(),
-      amount: amount,
-      note: _noteController.text,
-      date: DateTime.now(),
-    );
-
-    await TransactionsStorage.add(item);
+    if (widget.existing != null) {
+      final updated = TransactionItem(
+        id: widget.existing!.id,
+        amount: amount,
+        note: _noteController.text,
+        date: widget.existing!.date,
+      );
+      await TransactionsStorage.update(updated);
+    } else {
+      final item = TransactionItem(
+        id: Random().nextInt(999999).toString(),
+        amount: amount,
+        note: _noteController.text,
+        date: DateTime.now(),
+      );
+      await TransactionsStorage.add(item);
+    }
 
     if (mounted) {
       Navigator.pop(context, true);
@@ -42,8 +61,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.existing != null;
     return Scaffold(
-      appBar: AppBar(title: const Text('Добавить расход')),
+      appBar: AppBar(
+        title: Text(isEditing ? 'Редактировать расход' : 'Добавить расход'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

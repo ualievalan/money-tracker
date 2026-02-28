@@ -10,7 +10,7 @@ import 'package:money_tracker/features/auth/presentation/screen/login_screen.dar
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 import 'core/theme/app_theme.dart';
-import 'features/transactions/data /transactions_storage.dart';
+import 'features/transactions/data/transactions_storage.dart';
 import 'features/welcome/presentation/welcome_screen.dart';
 import 'main_screen.dart';
 

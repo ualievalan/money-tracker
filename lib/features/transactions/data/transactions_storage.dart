@@ -7,7 +7,7 @@ class TransactionsStorage {
   static final List<TransactionItem> _items = [];
 
   static List<TransactionItem> getAll() {
-    return _items;
+    return List.unmodifiable(_items);
   }
 
   static Future<void> load() async {
@@ -26,10 +26,23 @@ class TransactionsStorage {
     await _save();
   }
 
+  static Future<void> update(TransactionItem updated) async {
+    final index = _items.indexWhere((e) => e.id == updated.id);
+
+    if (index != -1) {
+      _items[index] = updated;
+      await _save();
+    }
+  }
+
+  static Future<void> delete(String id) async {
+    _items.removeWhere((e) => e.id == id);
+    await _save();
+  }
+
   static Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString =
-        jsonEncode(_items.map((e) => e.toJson()).toList());
+    final jsonString = jsonEncode(_items.map((e) => e.toJson()).toList());
     await prefs.setString(_key, jsonString);
   }
 }
