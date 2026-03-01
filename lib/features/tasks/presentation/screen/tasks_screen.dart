@@ -53,36 +53,8 @@ class _TasksScreenState extends State<TasksScreen> {
           return Dismissible(
             key: ValueKey('${task["title"]}-$index'),
             direction: DismissDirection.horizontal,
-            confirmDismiss: (direction) async {
-              if (direction == DismissDirection.startToEnd) {
-                _showEditTaskDialog(index);
-                return false;
-              }
-              return await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Удалить задачу?'),
-                      content: const Text('Это действие нельзя отменить.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Отмена'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text('Удалить'),
-                        ),
-                      ],
-                    ),
-                  ) ??
-                  false;
-            },
-            onDismissed: (_) {
-              setState(() {
-                tasks.removeAt(index);
-              });
-              _saveTasks();
-            },
+            confirmDismiss: (direction) => _handleDismiss(direction, index),
+            onDismissed: (_) => _deleteTask(index),
             background: Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,6 +86,7 @@ class _TasksScreenState extends State<TasksScreen> {
                         : Colors.grey,
                   ),
                 ),
+
                 title: Text(
                   task["title"].toString(),
                   style: TextStyle(
@@ -135,6 +108,42 @@ class _TasksScreenState extends State<TasksScreen> {
         },
       ),
     );
+  }
+
+  Future<bool> _handleDismiss(DismissDirection direction, int index) async {
+    if (direction == DismissDirection.startToEnd) {
+      _showEditTaskDialog(index);
+      return false;
+    }
+    return _showDeleteConfirmDialog();
+  }
+
+  Future<bool> _showDeleteConfirmDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Удалить задачу?'),
+            content: const Text('Это действие нельзя отменить.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Отмена'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Удалить'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  void _deleteTask(int index) {
+    setState(() {
+      tasks.removeAt(index);
+    });
+    _saveTasks();
   }
 
   void _showAddTaskDialog() {
