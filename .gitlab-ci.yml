@@ -38,6 +38,7 @@ debug:runner-info:
 
 dev:ui-demo-artifact:
   stage: dev
+  before_script: [] # ничего не устанавливаем, просто прикрепляем файл
   script:
     - echo "Attach UI demo video as artifact"
   artifacts:
