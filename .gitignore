@@ -66,6 +66,7 @@ google-services-base64.txt
 
 # VS Code — личные настройки запуска не коммитим, но settings.json коммитим
 .vscode/
+.vscode/settings.json
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -100,9 +101,8 @@ app.*.map.json
 **/Podfile.lock
 /packages/**/pubspec.lock
 
-# FVM Version Cache
+# FVM — кэш SDK не коммитим; .fvmrc коммитим для фиксации версии
 .fvm/
-.fvmrc
 
 **/localization/generated/
 **/localization/generated_arb/

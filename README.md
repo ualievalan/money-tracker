@@ -1,6 +1,30 @@
 # money tracker
 
+В проекте зафиксирована версия Flutter через [FVM](https://fvm.app): **3.38.5**.
 
+### Документация для команды
+
+- **Git / Merge Request / конфликты**: `docs/git-flow.md`
+- **Архитектура и структура фич**: `docs/architecture.md`
+- **BLoC / Cubit и состояние**: `docs/state-management.md`
+- **Supabase и кэширование**: `docs/supabase-and-cache.md`
+
+Новые разработчики сначала читают эти файлы, а уже потом лезут в код.
+
+## Локальная разработка (FVM)
+
+```bash
+# Установить FVM (один раз)
+dart pub global activate fvm
+
+# В корне проекта: установить Flutter из .fvmrc (3.38.5)
+fvm install
+
+# Дальше все команды — через fvm
+fvm flutter pub get
+fvm flutter run
+# или добавь .fvm/flutter_sdk/bin в PATH и используй flutter как обычно
+```
 
 ## Getting started
 

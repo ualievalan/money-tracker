@@ -1,7 +1,7 @@
 name: money_tracker
 description: "A new Flutter project."
 publish_to: 'none'
-version: 0.1.1+4
+version: 0.1.2+1
 
 environment:
   sdk: ^3.9.0
