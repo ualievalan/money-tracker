@@ -7,7 +7,7 @@ class TransactionsStorage {
   static final List<TransactionItem> _items = [];
 
   static List<TransactionItem> getAll() {
-    return List.unmodifiable(_items);
+    return _items.toList();
   }
 
   static Future<void> load() async {
