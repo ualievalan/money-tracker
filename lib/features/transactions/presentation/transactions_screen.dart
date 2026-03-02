@@ -44,7 +44,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         final updated = await Navigator.push<bool>(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => AddExpenseScreen(existing: t),
+                            builder: (_) => AddExpenseScreen(transaction: t),
                           ),
                         );
                         if (updated == true && mounted) _refresh();
