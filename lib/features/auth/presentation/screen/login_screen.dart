@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
@@ -41,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -53,11 +55,11 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.9),
+                  color: Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -70,7 +72,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          _isSignUp ? 'Регистрация' : 'Вход',
+                          _isSignUp
+                              ? loc.loginSignUpTitle
+                              : loc.loginSignInTitle,
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -79,9 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           enabled: !isLoading,
-                          decoration: const InputDecoration(
-                            labelText: 'Email',
-                            prefixIcon: Icon(Icons.email_outlined),
+                          decoration: InputDecoration(
+                            labelText: loc.email,
+                            prefixIcon: const Icon(Icons.email_outlined),
                           ),
                         ),
                         const SizedBox(height: 16),
@@ -89,9 +93,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: _passwordController,
                           obscureText: true,
                           enabled: !isLoading,
-                          decoration: const InputDecoration(
-                            labelText: 'Пароль',
-                            prefixIcon: Icon(Icons.lock_outline),
+                          decoration: InputDecoration(
+                            labelText: loc.password,
+                            prefixIcon: const Icon(Icons.lock_outline),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -109,7 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   )
                                 : Text(
-                                    _isSignUp ? 'Зарегистрироваться' : 'Войти',
+                                    _isSignUp
+                                        ? loc.signUpButton
+                                        : loc.signInButton,
                                   ),
                           ),
                         ),
@@ -120,8 +126,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               : () => setState(() => _isSignUp = !_isSignUp),
                           child: Text(
                             _isSignUp
-                                ? 'Уже есть аккаунт? Войти'
-                                : 'Нет аккаунта? Зарегистрироваться',
+                                ? loc.alreadyHaveAccount
+                                : loc.noAccountYet,
                           ),
                         ),
                       ],

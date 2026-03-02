@@ -1,4 +1,6 @@
+# ==============================
 # Miscellaneous
+# ==============================
 *.class
 *.log
 *.pyc
@@ -13,62 +15,20 @@
 migrate_working_dir/
 .env
 
-# IntelliJ related
+# ==============================
+# IDE / Editor
+# ==============================
 *.iml
 *.ipr
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-.vscode/
-
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
-.dart_tool/
-.flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
-
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-# Fastlane — Ruby gems (не нужны в git, ставятся через bundle install)
-android/vendor/
-android/.bundle/
-
-# Fastlane — секретные ключи (никогда не коммитить!)
-android/fastlane/firebase-service-account.json
-android/fastlane/report.xml
-
-# Keystore и подписи (секреты)
-android/app/upload-keystore.jks
-android/key.properties
-
-# Firebase / Google — секретные ключи и base64 файлы
-*.json
-!pubspec.json
-firebase-deploy-key-base64*.txt
-upload-keystore-base64.txt
-google-services-base64.txt
-
-# VS Code — личные настройки запуска не коммитим, но settings.json коммитим
 .vscode/
 .vscode/settings.json
 
-# Flutter/Dart/Pub related
+# ==============================
+# Flutter / Dart / Pub
+# ==============================
 **/doc/api/
 **/ios/Flutter/.last_build_id
 .dart_tool/
@@ -78,41 +38,58 @@ google-services-base64.txt
 .pub-cache/
 .pub/
 /build/
+ios/build/
+/coverage/
 
-# Symbolication related
-app.*.symbols
+devtools_options.yaml
 
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
+# ==============================
+# Android build artifacts
+# ==============================
 /android/app/debug
 /android/app/profile
 /android/app/release
 
-/.fvm/flutter_sdk
-/modules/bcc_core/pubspec.lock
-/pubspec.lock
-/devtools_options.yaml
-
+# ==============================
+# iOS generated files
+# ==============================
 **/Generated.xcconfig
 **/flutter_export_environment.sh
 **/.android/local.properties
 **/Podfile.lock
+
+# ==============================
+# FVM
+# ==============================
+/.fvm/flutter_sdk
+.fvm/
+.fvmrc
+
+# ==============================
+# Lock files
+# ==============================
+/modules/bcc_core/pubspec.lock
 /packages/**/pubspec.lock
 
-# FVM — кэш SDK не коммитим; .fvmrc коммитим для фиксации версии
-.fvm/
-
+# ==============================
+# Localization generated files
+# ==============================
 **/localization/generated/
 **/localization/generated_arb/
 
-# Devtools
-devtools_options.yaml
+# ==============================
+# Fastlane & Signing (Secrets)
+# ==============================
+android/vendor/
+android/.bundle/
+android/fastlane/firebase-service-account.json
+android/fastlane/report.xml
+android/app/upload-keystore.jks
+android/key.properties
 
-# Fastlane Auth Keys & Artifacts
 ios/vendor/
 ios/.bundle/
+
 *.p8
 AuthKey_*.p8
 *.cer
@@ -121,9 +98,24 @@ AuthKey_*.p8
 *.mobileprovision
 *.ipa
 *.zip
-*.p8
-AuthKey_*.p8
 
-# Bundler local install
+# ==============================
+# Firebase / Google secrets
+# ==============================
+*.json
+!pubspec.json
+firebase-deploy-key-base64*.txt
+upload-keystore-base64.txt
+google-services-base64.txt
+
+# ==============================
+# Bundler
+# ==============================
 vendor/bundle
 .bundle/
+
+# ==============================
+# Obfuscation & Symbolication
+# ==============================
+app.*.symbols
+app.*.map.json

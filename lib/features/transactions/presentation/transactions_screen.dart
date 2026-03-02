@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/transactions/data%20/transactions_storage.dart';
 import 'package:money_tracker/features/transactions/presentation/add_expense_screen.dart';
 
@@ -7,13 +8,14 @@ class TransactionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     final items = TransactionsStorage.getAll();
 
     return Stack(
       children: [
         items.isEmpty
-            ? const Center(
-                child: Text('Здесь будет список ваших транзакций'),
+            ? Center(
+                child: Text(loc.transactionsEmpty),
               )
             : ListView.builder(
                 itemCount: items.length,

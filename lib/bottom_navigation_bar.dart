@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 
 class AppleBottomNavBar extends StatelessWidget {
   const AppleBottomNavBar({
@@ -15,6 +16,7 @@ class AppleBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     const selectedColor = Color(0xFF007AFF);
     const unselectedColor = Color(0xFF8E8E93);
     const panelColor = Color(0xFF2C2C2E);
@@ -55,7 +57,7 @@ class AppleBottomNavBar extends StatelessWidget {
               _NavItem(
                 icon: Icons.flag_outlined,
                 selectedIcon: Icons.flag,
-                label: 'Главная',
+                label: loc.home,
                 index: 0,
                 isSelected: currentIndex == 0,
                 selectedColor: selectedColor,
@@ -68,7 +70,7 @@ class AppleBottomNavBar extends StatelessWidget {
               _NavItem(
                 icon: Icons.task_outlined,
                 selectedIcon: Icons.task,
-                label: 'Дела',
+                label: loc.tasks,
                 index: 1,
                 isSelected: currentIndex == 1,
                 selectedColor: selectedColor,
@@ -81,7 +83,7 @@ class AppleBottomNavBar extends StatelessWidget {
               _NavItem(
                 icon: Icons.account_balance_wallet_outlined,
                 selectedIcon: Icons.account_balance_wallet,
-                label: 'Расходы',
+                label: loc.transactions,
                 index: 2,
                 isSelected: currentIndex == 2,
                 selectedColor: selectedColor,

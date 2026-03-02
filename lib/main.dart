@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:money_tracker/core/di/injection.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
+import 'package:money_tracker/core/localization/locale_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
@@ -47,16 +50,31 @@ class MoneyTrackerApp extends StatelessWidget {
         BlocProvider(
           create: (_) => ThemeCubit(),
         ),
+        BlocProvider(
+          create: (_) => LocaleCubit(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
-            title: 'Money Tracker',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeMode,
-            home: const AppNavigator(),
+          return BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) {
+              return MaterialApp(
+                title: 'Money Tracker',
+                debugShowCheckedModeBanner: false,
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeMode,
+                locale: locale,
+                supportedLocales: AppLocalizations.supportedLocales,
+                localizationsDelegates: const [
+                  AppLocalizationsDelegate(),
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                home: const AppNavigator(),
+              );
+            },
           );
         },
       ),

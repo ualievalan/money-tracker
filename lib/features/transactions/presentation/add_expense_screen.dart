@@ -1,5 +1,7 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/transactions/domain/transaction.dart';
 import 'package:money_tracker/features/transactions/data%20/transactions_storage.dart';
 
@@ -42,8 +44,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Добавить расход')),
+      appBar: AppBar(title: Text(loc.addExpenseTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -51,19 +54,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Сумма'),
+              decoration: InputDecoration(labelText: loc.amount),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Комментарий'),
+              decoration: InputDecoration(labelText: loc.note),
             ),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _save,
-                child: const Text('Сохранить'),
+                child: Text(loc.save),
               ),
             ),
           ],
