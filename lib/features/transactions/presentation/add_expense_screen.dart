@@ -4,13 +4,9 @@ import 'package:money_tracker/features/transactions/domain/transaction.dart';
 import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
 
 class AddExpenseScreen extends StatefulWidget {
-  /// If null – creating a new transaction, otherwise editing the provided one.
   final TransactionItem? transaction;
 
-  const AddExpenseScreen({
-    super.key,
-    this.transaction,
-  });
+  const AddExpenseScreen({super.key, this.transaction});
 
   @override
   State<AddExpenseScreen> createState() => _AddExpenseScreenState();
@@ -24,9 +20,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   void initState() {
     super.initState();
 
-    if (widget.transaction != null) {
-      _amountController.text = widget.transaction!.amount.toString();
-      _noteController.text = widget.transaction!.note;
+    final transaction = widget.transaction;
+    if (transaction != null) {
+      _amountController.text = transaction.amount.toString();
+      _noteController.text = transaction.note;
     }
   }
 
@@ -42,12 +39,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
     if (amount == null || amount <= 0) return;
 
-    if (widget.transaction != null) {
+    final transaction = widget.transaction;
+
+    if (transaction != null) {
       final updatedTransaction = TransactionItem(
-        id: widget.transaction!.id,
+        id: transaction.id,
         amount: amount,
         note: _noteController.text,
-        date: widget.transaction!.date,
+        date: transaction.date,
       );
 
       await TransactionsStorage.update(updatedTransaction);
