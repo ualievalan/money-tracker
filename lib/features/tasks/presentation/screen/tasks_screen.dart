@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/features/tasks/presentation/bloc/tasks_bloc.dart';
+import 'package:money_tracker/features/tasks/presentation/bloc/tasks_event.dart';
+import 'package:money_tracker/features/tasks/presentation/bloc/tasks_state.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -10,99 +12,75 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final List<Map<String, dynamic>> tasks = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTasks();
-  }
-
-  Future<void> _loadTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString('tasks');
-    if (raw == null) return;
-
-    final decoded = jsonDecode(raw) as List<dynamic>;
-    setState(() {
-      tasks
-        ..clear()
-        ..addAll(decoded.map((e) => Map<String, dynamic>.from(e)));
-    });
-  }
-
-  Future<void> _saveTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('tasks', jsonEncode(tasks));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Дела')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddTaskDialog,
-        child: const Icon(Icons.add),
-      ),
-      body: ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (context, index) {
-          final task = tasks[index];
-          final isOverdue = task["status"] == "overdue";
-
-          return Dismissible(
-            key: ValueKey('${task["title"]}-$index'),
-            direction: DismissDirection.horizontal,
-            confirmDismiss: (direction) => _handleDismiss(direction, index),
-            onDismissed: (_) => _deleteTask(index),
-            background: Container(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              color: Colors.red.withValues(alpha: 0.2),
-              child: const Icon(Icons.delete, color: Colors.red),
+    return BlocProvider(
+      create: (_) => TasksBloc(),
+      child: Builder(
+        builder: (blocContext) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Дела')),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () => _showAddTaskDialog(blocContext),
+              child: const Icon(Icons.add),
             ),
-            child: GestureDetector(
-              onTap: () {
-                _showEditTaskDialog(index);
-              },
-              child: ListTile(
-                leading: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      if (task["status"] == "overdue") {
-                        task["status"] = "done";
-                      } else {
-                        task["status"] = "overdue";
-                      }
-                    });
-                    _saveTasks();
-                  },
-                  icon: Icon(
-                    task["status"] == "done"
-                        ? Icons.check_circle
-                        : Icons.radio_button_unchecked,
-                    color: task["status"] == "done"
-                        ? Colors.green
-                        : Colors.grey,
-                  ),
-                ),
+            body: BlocBuilder<TasksBloc, TasksState>(
+              builder: (context, state) {
+                final tasks = state.tasks;
 
-                title: Text(
-                  task["title"].toString(),
-                  style: TextStyle(
-                    decoration: task["status"] == "done"
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                    color: task["status"] == "done" ? Colors.grey : null,
-                  ),
-                ),
-                trailing: Text(
-                  isOverdue ? "Просрочено" : "Выполнено",
-                  style: TextStyle(
-                    color: isOverdue ? Colors.red : Colors.green,
-                  ),
-                ),
-              ),
+                return ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+                    final isOverdue = task["status"] == "overdue";
+
+                    return Dismissible(
+                      key: ValueKey(
+                        task["id"]?.toString() ?? '${task["title"]}-$index',
+                      ),
+                      direction: DismissDirection.horizontal,
+                      confirmDismiss: (direction) =>
+                          _handleDismiss(blocContext, direction, index),
+                      onDismissed: (_) =>
+                          _deleteTask(blocContext, task["id"].toString()),
+
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        color: Colors.red.withValues(alpha: 0.2),
+                        child: const Icon(Icons.delete, color: Colors.red),
+                      ),
+                      child: GestureDetector(
+                        onTap: () => _showEditTaskDialog(blocContext, index),
+                        child: ListTile(
+                          leading: IconButton(
+                            onPressed: () {
+                              blocContext.read<TasksBloc>().add(
+                                ToggleTaskStatus(index),
+                              );
+                            },
+                            icon: Icon(
+                              task["status"] == "done"
+                                  ? Icons.check_circle
+                                  : Icons.radio_button_unchecked,
+                              color: task["status"] == "done"
+                                  ? Colors.green
+                                  : Colors.grey,
+                            ),
+                          ),
+                          title: Text(task["title"].toString()),
+                          trailing: Text(
+                            isOverdue ? "Просрочено" : "Выполнено",
+                            style: TextStyle(
+                              color: isOverdue ? Colors.red : Colors.green,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           );
         },
@@ -110,27 +88,31 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
-  Future<bool> _handleDismiss(DismissDirection direction, int index) async {
+  Future<bool> _handleDismiss(
+    BuildContext blocContext,
+    DismissDirection direction,
+    int index,
+  ) async {
     if (direction == DismissDirection.startToEnd) {
-      _showEditTaskDialog(index);
+      _showEditTaskDialog(blocContext, index);
       return false;
     }
-    return _showDeleteConfirmDialog();
+    return _showDeleteConfirmDialog(blocContext);
   }
 
-  Future<bool> _showDeleteConfirmDialog() async {
+  Future<bool> _showDeleteConfirmDialog(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
-          builder: (context) => AlertDialog(
+          builder: (dialogContext) => AlertDialog(
             title: const Text('Удалить задачу?'),
             content: const Text('Это действие нельзя отменить.'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pop(context, false),
+                onPressed: () => Navigator.pop(dialogContext, false),
                 child: const Text('Отмена'),
               ),
               TextButton(
-                onPressed: () => Navigator.pop(context, true),
+                onPressed: () => Navigator.pop(dialogContext, true),
                 child: const Text('Удалить'),
               ),
             ],
@@ -139,19 +121,16 @@ class _TasksScreenState extends State<TasksScreen> {
         false;
   }
 
-  void _deleteTask(int index) {
-    setState(() {
-      tasks.removeAt(index);
-    });
-    _saveTasks();
+  void _deleteTask(BuildContext context, String id) {
+    context.read<TasksBloc>().add(DeleteTask(id));
   }
 
-  void _showAddTaskDialog() {
+  void _showAddTaskDialog(BuildContext context) {
     final controller = TextEditingController();
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Новая задача'),
           content: TextField(
@@ -160,19 +139,16 @@ class _TasksScreenState extends State<TasksScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Отмена'),
             ),
             TextButton(
               onPressed: () {
                 final text = controller.text.trim();
                 if (text.isNotEmpty) {
-                  setState(() {
-                    tasks.insert(0, {"title": text, "status": "overdue"});
-                  });
-                  _saveTasks();
+                  context.read<TasksBloc>().add(AddTask(text));
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text('Добавить'),
             ),
@@ -182,14 +158,13 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
-  void _showEditTaskDialog(int index) {
-    final controller = TextEditingController(
-      text: tasks[index]["title"].toString(),
-    );
+  void _showEditTaskDialog(BuildContext context, int index) {
+    final task = context.read<TasksBloc>().state.tasks[index];
+    final controller = TextEditingController(text: task["title"].toString());
 
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Редактировать задачу'),
           content: TextField(
@@ -198,19 +173,16 @@ class _TasksScreenState extends State<TasksScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Отмена'),
             ),
             TextButton(
               onPressed: () {
                 final text = controller.text.trim();
                 if (text.isNotEmpty) {
-                  setState(() {
-                    tasks[index]["title"] = text;
-                  });
-                  _saveTasks();
+                  context.read<TasksBloc>().add(EditTask(index, text));
                 }
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
               },
               child: const Text('Сохранить'),
             ),
