@@ -1,4 +1,5 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,8 +18,9 @@ class AppleBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedColor = isDark ? Colors.white : Colors.black;
-    final unselectedColor = isDark ? Colors.grey.shade600 : Colors.grey.shade400;
-
+    final unselectedColor = isDark
+        ? Colors.grey.shade600
+        : Colors.grey.shade400;
 
     final glassColor = isDark
         ? Colors.black.withOpacity(0.5)
@@ -37,61 +39,74 @@ class AppleBottomNavBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(32),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-            child: Container(
-              height: 64,
-              decoration: BoxDecoration(
-                color: glassColor,
-                borderRadius: BorderRadius.circular(32),
-                border: Border.all(
-                  color: borderColor,
-                  width: 1.0,
+            child: GestureDetector(
+              onHorizontalDragEnd: (details) {
+                const sensitivity = 0;
+                if (details.primaryVelocity! < -sensitivity) {
+                  if (currentIndex < 2) {
+                    HapticFeedback.lightImpact();
+                    onTap(currentIndex + 1);
+                  }
+                } else if (details.primaryVelocity! > sensitivity) {
+                  if (currentIndex > 0) {
+                    HapticFeedback.lightImpact();
+                    onTap(currentIndex - 1);
+                  }
+                }
+              },
+              child: Container(
+                height: 64,
+                decoration: BoxDecoration(
+                  color: glassColor,
+                  borderRadius: BorderRadius.circular(32),
+                  border: Border.all(color: borderColor, width: 1.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 20,
+                      offset: Offset(0, 8),
+                    ),
+                  ],
                 ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 20,
-                    offset: Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _NavItem(
-                    icon: Icons.home_rounded,
-                    label: 'Главная',
-                    isSelected: currentIndex == 0,
-                    selectedColor: selectedColor,
-                    unselectedColor: unselectedColor,
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      onTap(0);
-                    },
-                  ),
-                  _NavItem(
-                    icon: Icons.check_circle_outline_rounded,
-                    label: 'Дела',
-                    isSelected: currentIndex == 1,
-                    selectedColor: selectedColor,
-                    unselectedColor: unselectedColor,
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      onTap(1);
-                    },
-                  ),
-                  _NavItem(
-                    icon: Icons.account_balance_wallet_rounded,
-                    label: 'Расходы',
-                    isSelected: currentIndex == 2,
-                    selectedColor: selectedColor,
-                    unselectedColor: unselectedColor,
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      onTap(2);
-                    },
-                  ),
-                ],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _NavItem(
+                      icon: Icons.home_rounded,
+                      label: 'Главная',
+                      isSelected: currentIndex == 0,
+                      selectedColor: selectedColor,
+                      unselectedColor: unselectedColor,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onTap(0);
+                      },
+                    ),
+                    _NavItem(
+                      icon: Icons.check_circle_outline_rounded,
+                      label: 'Дела',
+                      isSelected: currentIndex == 1,
+                      selectedColor: selectedColor,
+                      unselectedColor: unselectedColor,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onTap(1);
+                      },
+                    ),
+                    _NavItem(
+                      icon: Icons.account_balance_wallet_rounded,
+                      label: 'Расходы',
+                      isSelected: currentIndex == 2,
+                      selectedColor: selectedColor,
+                      unselectedColor: unselectedColor,
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        onTap(2);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

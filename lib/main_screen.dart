@@ -17,12 +17,25 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  late final PageController _pageController;
 
   final List<Widget> _screens = [
     const HomeScreen(),
     const TasksScreen(),
     const TransactionsScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   void _showEditNameDialog() {
     final controller = TextEditingController();
@@ -79,7 +92,11 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_currentIndex == 0 ? 'Главная' : 'Транзакции'),
+        title: Text(
+          _currentIndex == 0
+              ? 'Главная'
+              : (_currentIndex == 1 ? 'Дела' : 'Транзакции'),
+        ),
       ),
       drawer: Drawer(
         backgroundColor: isDark
@@ -173,7 +190,26 @@ class _MainScreenState extends State<MainScreen> {
                         isDark: isDark,
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          setState(() => _currentIndex = 0);
+                          _pageController.animateToPage(
+                            0,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                          Navigator.pop(context);
+                        },
+                      ),
+                      _buildDivider(isDark),
+                      _buildDrawerItem(
+                        icon: Icons.check_circle_outline_rounded,
+                        title: 'Дела',
+                        isDark: isDark,
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          _pageController.animateToPage(
+                            1,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
                           Navigator.pop(context);
                         },
                       ),
@@ -184,7 +220,11 @@ class _MainScreenState extends State<MainScreen> {
                         isDark: isDark,
                         onTap: () {
                           HapticFeedback.lightImpact();
-                          setState(() => _currentIndex = 1);
+                          _pageController.animateToPage(
+                            2,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
                           Navigator.pop(context);
                         },
                       ),
@@ -293,15 +333,26 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: _screens[_currentIndex],
+      body: PageView(
+        controller: _pageController,
+        physics: const ClampingScrollPhysics(), // Smooth Apple-like scrolling
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: _screens,
+      ),
       bottomNavigationBar: AppleBottomNavBar(
         currentIndex: _currentIndex,
         isDark: isDark,
         onTap: (index) {
           HapticFeedback.lightImpact();
-          setState(() {
-            _currentIndex = index;
-          });
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
         },
       ),
     );
@@ -352,7 +403,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildDivider(bool isDark) {
     return Padding(
-      padding: const EdgeInsets.only(left: 54), 
+      padding: const EdgeInsets.only(left: 54),
       child: Divider(
         height: 1,
         thickness: 0.5,
