@@ -1,7 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/features/transactions/domain/transaction.dart';
-import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
+import 'package:money_tracker/core/di/injection.dart';
+import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
+import 'package:money_tracker/features/transactions/domain/usecases/add_transaction_use_case.dart';
+import 'package:money_tracker/features/transactions/domain/usecases/update_transaction_use_case.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final TransactionItem? transaction;
@@ -15,6 +17,11 @@ class AddExpenseScreen extends StatefulWidget {
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
+
+  late final AddTransactionUseCase _addTransaction =
+      getIt<AddTransactionUseCase>();
+  late final UpdateTransactionUseCase _updateTransaction =
+      getIt<UpdateTransactionUseCase>();
 
   @override
   void initState() {
@@ -49,7 +56,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         date: transaction.date,
       );
 
-      await TransactionsStorage.update(updatedTransaction);
+      await _updateTransaction(updatedTransaction);
     } else {
       final newTransaction = TransactionItem(
         id: Random().nextInt(999999).toString(),
@@ -58,7 +65,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         date: DateTime.now(),
       );
 
-      await TransactionsStorage.add(newTransaction);
+      await _addTransaction(newTransaction);
     }
 
     if (mounted) {
