@@ -21,6 +21,9 @@ abstract interface class AuthRepository {
   /// Signs out the current user.
   Future<Result<void>> signOut();
 
+  /// Signs in with Apple ID.
+  Future<Result<AuthEntity>> signInWithApple();
+
   /// Returns the currently authenticated user, or `null` if not logged in.
   AuthEntity? get currentUser;
 
