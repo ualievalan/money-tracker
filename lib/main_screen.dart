@@ -5,6 +5,7 @@ import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/core/localization/locale_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
+import 'package:money_tracker/features/settings/presentation/screen/settings_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'features/home/presentation/home_screen.dart';
@@ -196,6 +197,19 @@ class _MainScreenState extends State<MainScreen> {
               onTap: () {
                 Navigator.pop(context);
                 _showLanguageBottomSheet(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text(loc.settings),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => const SettingsScreen(),
+                  ),
+                );
               },
             ),
             SwitchListTile(

@@ -22,6 +22,7 @@ class AppLocalizations {
       'home': 'Главная',
       'transactions': 'Транзакции',
       'tasks': 'Задачи',
+      'settings': 'Настройки',
       'change_name': 'Изменить имя',
       'dark_theme': 'Тёмная тема',
       'logout': 'Выйти',
@@ -58,6 +59,19 @@ class AppLocalizations {
       'add_expense_title': 'Добавить расход',
       'amount': 'Сумма',
       'note': 'Комментарий',
+      'security': 'Безопасность',
+      'change_password': 'Изменить пароль',
+      'new_password': 'Новый пароль',
+      'confirm_password': 'Подтвердите пароль',
+      'passwords_do_not_match': 'Пароли не совпадают',
+      'password_changed': 'Пароль изменён',
+      'password_change_error': 'Не удалось изменить пароль',
+      'font_size': 'Размер шрифта',
+      'font_family': 'Шрифт',
+      'notifications': 'Уведомления',
+      'notifications_enable': 'Включить уведомления',
+      'notifications_time': 'Время уведомлений',
+      'notifications_off': 'Уведомления отключены',
     },
     'kk': {
       'app_title': 'Money Tracker',
@@ -65,6 +79,7 @@ class AppLocalizations {
       'home': 'Басты бет',
       'transactions': 'Транзакциялар',
       'tasks': 'Тапсырмалар',
+      'settings': 'Баптаулар',
       'change_name': 'Атын өзгерту',
       'dark_theme': 'Қараңғы тақырып',
       'logout': 'Шығу',
@@ -101,6 +116,19 @@ class AppLocalizations {
       'add_expense_title': 'Шығын қосу',
       'amount': 'Сома',
       'note': 'Түсініктеме',
+      'security': 'Қауіпсіздік',
+      'change_password': 'Құпия сөзді өзгерту',
+      'new_password': 'Жаңа құпия сөз',
+      'confirm_password': 'Құпия сөзді растаңыз',
+      'passwords_do_not_match': 'Құпия сөздер сәйкес келмейді',
+      'password_changed': 'Құпия сөз өзгертілді',
+      'password_change_error': 'Құпия сөзді өзгерту мүмкін болмады',
+      'font_size': 'Қаріп өлшемі',
+      'font_family': 'Қаріп',
+      'notifications': 'Хабарламалар',
+      'notifications_enable': 'Хабарламаларды қосу',
+      'notifications_time': 'Хабарлама уақыты',
+      'notifications_off': 'Хабарламалар сөндірілген',
     },
     'en': {
       'app_title': 'Money Tracker',
@@ -108,6 +136,7 @@ class AppLocalizations {
       'home': 'Home',
       'transactions': 'Transactions',
       'tasks': 'Tasks',
+      'settings': 'Settings',
       'change_name': 'Edit name',
       'dark_theme': 'Dark theme',
       'logout': 'Logout',
@@ -143,6 +172,19 @@ class AppLocalizations {
       'add_expense_title': 'Add expense',
       'amount': 'Amount',
       'note': 'Note',
+      'security': 'Security',
+      'change_password': 'Change password',
+      'new_password': 'New password',
+      'confirm_password': 'Confirm password',
+      'passwords_do_not_match': 'Passwords do not match',
+      'password_changed': 'Password changed',
+      'password_change_error': 'Failed to change password',
+      'font_size': 'Font size',
+      'font_family': 'Font family',
+      'notifications': 'Notifications',
+      'notifications_enable': 'Enable notifications',
+      'notifications_time': 'Notification time',
+      'notifications_off': 'Notifications are off',
     },
   };
 
@@ -157,6 +199,7 @@ class AppLocalizations {
   String get home => _text('home');
   String get transactions => _text('transactions');
   String get tasks => _text('tasks');
+  String get settings => _text('settings');
   String get changeName => _text('change_name');
   String get darkTheme => _text('dark_theme');
   String get logout => _text('logout');
@@ -192,6 +235,19 @@ class AppLocalizations {
   String get addExpenseTitle => _text('add_expense_title');
   String get amount => _text('amount');
   String get note => _text('note');
+  String get security => _text('security');
+  String get changePassword => _text('change_password');
+  String get newPassword => _text('new_password');
+  String get confirmPassword => _text('confirm_password');
+  String get passwordsDoNotMatch => _text('passwords_do_not_match');
+  String get passwordChanged => _text('password_changed');
+  String get passwordChangeError => _text('password_change_error');
+  String get fontSize => _text('font_size');
+  String get fontFamily => _text('font_family');
+  String get notifications => _text('notifications');
+  String get notificationsEnable => _text('notifications_enable');
+  String get notificationsTime => _text('notifications_time');
+  String get notificationsOff => _text('notifications_off');
 }
 
 class AppLocalizationsDelegate
