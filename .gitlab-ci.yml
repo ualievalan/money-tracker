@@ -36,18 +36,6 @@ debug:runner-info:
   rules:
     - if: '$CI_COMMIT_BRANCH == "main"'
 
-dev:ui-demo-artifact:
-  stage: dev
-  before_script: [] # ничего не устанавливаем, просто прикрепляем файл
-  script:
-    - echo "Attach UI demo video as artifact"
-  artifacts:
-    expire_in: 7 days
-    paths:
-      - artifacts/demo.mp4
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "feature/burger-menu"'
-
 # Подготовка keystore / google-services.json
 prepare:keystore-and-config:
   stage: dev
