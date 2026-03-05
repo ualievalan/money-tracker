@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
@@ -124,6 +125,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : 'Нет аккаунта? Зарегистрироваться',
                           ),
                         ),
+                        if (!_isSignUp) ...[
+                          const SizedBox(height: 16),
+                          const Row(
+                            children: [
+                              Expanded(child: Divider()),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                child: Text('или'),
+                              ),
+                              Expanded(child: Divider()),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          SignInWithAppleButton(
+                            onPressed: isLoading
+                                ? () {}
+                                : () => context
+                                        .read<AuthBloc>()
+                                        .add(const AuthEvent.signInWithAppleRequested()),
+                          ),
+                        ],
                       ],
                     );
                   },

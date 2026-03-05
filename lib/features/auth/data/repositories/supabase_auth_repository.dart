@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:math' as dart_math;
+import 'package:crypto/crypto.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:injectable/injectable.dart';
 import 'package:money_tracker/core/error/failure.dart';
 import 'package:money_tracker/core/error/result.dart';
@@ -60,6 +64,57 @@ class SupabaseAuthRepository implements AuthRepository {
     } catch (_) {
       return const Result.error(ServerFailure());
     }
+  }
+
+  @override
+  Future<Result<AuthEntity>> signInWithApple() async {
+    try {
+      final rawNonce = _generateNonce();
+      final bytes = utf8.encode(rawNonce);
+      final digest = sha256.convert(bytes);
+      final hashedNonce = digest.toString();
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) {
+        return const Result.error(AuthFailure('Apple ID Token is null'));
+      }
+
+      final response = await _client.auth.signInWithIdToken(
+        provider: OAuthProvider.apple,
+        idToken: idToken,
+        nonce: rawNonce,
+      );
+
+      final user = response.user;
+      if (user == null) {
+        return const Result.error(AuthFailure('Не удалось войти через Apple.'));
+      }
+      return Result.success(_mapUser(user));
+    } on SignInWithAppleAuthorizationException catch (e) {
+      if (e.code == AuthorizationErrorCode.canceled) {
+        return const Result.error(AuthFailure('Авторизация отменена пользователем'));
+      }
+      return Result.error(AuthFailure(e.message));
+    } on AuthException catch (e) {
+      return Result.error(AuthFailure(e.message));
+    } catch (_) {
+      return const Result.error(ServerFailure());
+    }
+  }
+
+  /// Вспомогательная функция для генерации nonce
+  String _generateNonce([int length = 32]) {
+    const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    final random = dart_math.Random.secure();
+    return List.generate(length, (_) => charset[random.nextInt(charset.length)]).join();
   }
 
   @override
