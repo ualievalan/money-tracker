@@ -9,10 +9,10 @@ import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 import 'package:money_tracker/features/auth/presentation/screen/login_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
-import 'core/theme/app_theme.dart';
-import 'features/transactions/data /transactions_storage.dart';
-import 'features/welcome/presentation/welcome_screen.dart';
-import 'main_screen.dart';
+import 'package:money_tracker/core/theme/app_theme.dart';
+import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
+import 'package:money_tracker/features/welcome/presentation/welcome_screen.dart';
+import 'package:money_tracker/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,9 +44,7 @@ class MoneyTrackerApp extends StatelessWidget {
           create: (_) =>
               getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
         ),
-        BlocProvider(
-          create: (_) => ThemeCubit(),
-        ),
+        BlocProvider(create: (_) => ThemeCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
