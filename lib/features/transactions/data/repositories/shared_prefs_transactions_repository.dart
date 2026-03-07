@@ -1,16 +1,12 @@
 import 'dart:convert';
-
 import 'package:injectable/injectable.dart';
 import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
 import 'package:money_tracker/features/transactions/domain/repositories/transactions_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// SharedPreferences-based implementation of [TransactionsRepository].
-///
-/// Keeps an in-memory cache of transactions and persists them as JSON.
 @LazySingleton(as: TransactionsRepository)
-class SharedPrefsTransactionsRepository implements TransactionsRepository {
-  SharedPrefsTransactionsRepository();
+class TransactionsLocalRepository implements TransactionsRepository {
+  TransactionsLocalRepository();
 
   static const _key = 'transactions';
 
@@ -28,9 +24,7 @@ class SharedPrefsTransactionsRepository implements TransactionsRepository {
       _items
         ..clear()
         ..addAll(
-          decoded
-              .cast<Map<String, dynamic>>()
-              .map(TransactionItem.fromJson),
+          decoded.cast<Map<String, dynamic>>().map(TransactionItem.fromJson),
         );
     }
 
@@ -69,9 +63,11 @@ class SharedPrefsTransactionsRepository implements TransactionsRepository {
 
   Future<void> _save() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString =
-        jsonEncode(_items.map((e) => e.toJson()).toList(growable: false));
+    final jsonString = jsonEncode(
+      _items.map((e) => e.toJson()).toList(growable: false),
+    );
     await prefs.setString(_key, jsonString);
   }
 }
 
+class SharedPrefsTransactionsRepository {}

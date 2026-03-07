@@ -48,7 +48,7 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i3.SupabaseClientProvider>(
         () => _i3.SupabaseClientProvider());
     gh.lazySingleton<_i4.TransactionsRepository>(
-        () => _i5.SharedPrefsTransactionsRepository());
+        () => _i5.TransactionsLocalRepository());
     gh.lazySingleton<_i6.UpdateTransactionUseCase>(
         () => _i6.UpdateTransactionUseCase(gh<_i4.TransactionsRepository>()));
     gh.lazySingleton<_i7.AddTransactionUseCase>(
