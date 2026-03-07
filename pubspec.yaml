@@ -35,6 +35,8 @@ dependencies:
   flutter_animate: ^4.5.2
   google_fonts: ^8.0.1
   shared_preferences: ^2.2.3
+  sign_in_with_apple: ^7.0.1
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +48,7 @@ dev_dependencies:
   freezed: ^2.5.2
   json_serializable: any
   injectable_generator: ^2.4.1
+  auto_route_generator: ^8.1.0
 
 flutter:
   uses-material-design: true
