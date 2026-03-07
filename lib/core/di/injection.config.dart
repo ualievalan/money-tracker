@@ -35,45 +35,53 @@ import '../../features/transactions/domain/usecases/update_transaction_use_case.
 import '../network/supabase_client_provider.dart' as _i3;
 
 extension GetItInjectableX on _i1.GetIt {
-// initializes the registration of main-scope dependencies inside of GetIt
   _i1.GetIt init({
     String? environment,
     _i2.EnvironmentFilter? environmentFilter,
   }) {
-    final gh = _i2.GetItHelper(
-      this,
-      environment,
-      environmentFilter,
-    );
+    final gh = _i2.GetItHelper(this, environment, environmentFilter);
     gh.lazySingleton<_i3.SupabaseClientProvider>(
-        () => _i3.SupabaseClientProvider());
+      () => _i3.SupabaseClientProvider(),
+    );
     gh.lazySingleton<_i4.TransactionsRepository>(
-        () => _i5.TransactionsLocalRepository());
+      () => _i5.TransactionsLocalRepository(),
+    );
     gh.lazySingleton<_i6.UpdateTransactionUseCase>(
-        () => _i6.UpdateTransactionUseCase(gh<_i4.TransactionsRepository>()));
+      () => _i6.UpdateTransactionUseCase(gh<_i4.TransactionsRepository>()),
+    );
     gh.lazySingleton<_i7.AddTransactionUseCase>(
-        () => _i7.AddTransactionUseCase(gh<_i4.TransactionsRepository>()));
+      () => _i7.AddTransactionUseCase(gh<_i4.TransactionsRepository>()),
+    );
     gh.lazySingleton<_i8.AuthRepository>(
-        () => _i9.SupabaseAuthRepository(gh<_i3.SupabaseClientProvider>()));
+      () => _i9.SupabaseAuthRepository(gh<_i3.SupabaseClientProvider>()),
+    );
     gh.lazySingleton<_i10.DeleteTransactionUseCase>(
-        () => _i10.DeleteTransactionUseCase(gh<_i4.TransactionsRepository>()));
+      () => _i10.DeleteTransactionUseCase(gh<_i4.TransactionsRepository>()),
+    );
     gh.lazySingleton<_i11.GetTransactionsUseCase>(
-        () => _i11.GetTransactionsUseCase(gh<_i4.TransactionsRepository>()));
+      () => _i11.GetTransactionsUseCase(gh<_i4.TransactionsRepository>()),
+    );
     gh.lazySingleton<_i12.SignInUseCase>(
-        () => _i12.SignInUseCase(gh<_i8.AuthRepository>()));
+      () => _i12.SignInUseCase(gh<_i8.AuthRepository>()),
+    );
     gh.lazySingleton<_i13.SignInWithAppleUseCase>(
-        () => _i13.SignInWithAppleUseCase(gh<_i8.AuthRepository>()));
+      () => _i13.SignInWithAppleUseCase(gh<_i8.AuthRepository>()),
+    );
     gh.lazySingleton<_i14.SignOutUseCase>(
-        () => _i14.SignOutUseCase(gh<_i8.AuthRepository>()));
+      () => _i14.SignOutUseCase(gh<_i8.AuthRepository>()),
+    );
     gh.lazySingleton<_i15.SignUpUseCase>(
-        () => _i15.SignUpUseCase(gh<_i8.AuthRepository>()));
-    gh.factory<_i16.AuthBloc>(() => _i16.AuthBloc(
-          gh<_i12.SignInUseCase>(),
-          gh<_i15.SignUpUseCase>(),
-          gh<_i14.SignOutUseCase>(),
-          gh<_i13.SignInWithAppleUseCase>(),
-          gh<_i8.AuthRepository>(),
-        ));
+      () => _i15.SignUpUseCase(gh<_i8.AuthRepository>()),
+    );
+    gh.factory<_i16.AuthBloc>(
+      () => _i16.AuthBloc(
+        gh<_i12.SignInUseCase>(),
+        gh<_i15.SignUpUseCase>(),
+        gh<_i14.SignOutUseCase>(),
+        gh<_i13.SignInWithAppleUseCase>(),
+        gh<_i8.AuthRepository>(),
+      ),
+    );
     return this;
   }
 }
