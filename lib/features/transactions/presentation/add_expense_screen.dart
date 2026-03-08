@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:money_tracker/core/di/injection.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
-import 'package:money_tracker/features/transactions/domain/usecases/add_transaction_use_case.dart';
-import 'package:money_tracker/features/transactions/domain/usecases/update_transaction_use_case.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_event.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final TransactionItem? transaction;
@@ -17,11 +17,6 @@ class AddExpenseScreen extends StatefulWidget {
 class _AddExpenseScreenState extends State<AddExpenseScreen> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
-
-  late final AddTransactionUseCase _addTransaction =
-      getIt<AddTransactionUseCase>();
-  late final UpdateTransactionUseCase _updateTransaction =
-      getIt<UpdateTransactionUseCase>();
 
   @override
   void initState() {
@@ -41,12 +36,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     super.dispose();
   }
 
-  Future<void> _save() async {
-    final amount = double.tryParse(_amountController.text);
+  void _save() {
+    final rawText = _amountController.text.trim();
+    final normalizedText = rawText.replaceAll(',', '.');
+    final amount = double.tryParse(normalizedText);
 
     if (amount == null || amount <= 0) return;
 
     final transaction = widget.transaction;
+    final bloc = context.read<TransactionsBloc>();
 
     if (transaction != null) {
       final updatedTransaction = TransactionItem(
@@ -55,8 +53,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         note: _noteController.text,
         date: transaction.date,
       );
-
-      await _updateTransaction(updatedTransaction);
+      bloc.add(TransactionsEvent.updateTransactionRequested(updatedTransaction));
     } else {
       final newTransaction = TransactionItem(
         id: Random().nextInt(999999).toString(),
@@ -64,13 +61,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         note: _noteController.text,
         date: DateTime.now(),
       );
-
-      await _addTransaction(newTransaction);
+      bloc.add(TransactionsEvent.addTransactionRequested(newTransaction));
     }
 
-    if (mounted) {
-      Navigator.pop(context, true);
-    }
+    Navigator.pop(context, true);
   }
 
   @override

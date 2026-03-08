@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:money_tracker/core/di/injection.dart';
 import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
-import 'package:money_tracker/features/transactions/domain/usecases/add_transaction_use_case.dart';
-import 'package:money_tracker/features/transactions/domain/usecases/update_transaction_use_case.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_event.dart';
 
 class TransactionSheet extends StatefulWidget {
   const TransactionSheet({super.key, this.transaction});
@@ -19,11 +19,6 @@ class _TransactionSheetState extends State<TransactionSheet> {
   late final TextEditingController _noteController;
 
   late DateTime _selectedDate;
-
-  late final AddTransactionUseCase _addTransaction =
-      getIt<AddTransactionUseCase>();
-  late final UpdateTransactionUseCase _updateTransaction =
-      getIt<UpdateTransactionUseCase>();
 
   @override
   void initState() {
@@ -45,11 +40,9 @@ class _TransactionSheetState extends State<TransactionSheet> {
     super.dispose();
   }
 
-  Future<void> _save() async {
+  void _save() {
     final rawText = _amountController.text.trim();
-    // Разрешаем только цифры, точку и запятую, остальное отбрасываем
-    final digitsOnly =
-        rawText.replaceAll(RegExp(r'[^0-9,\\.]'), '');
+    final digitsOnly = rawText.replaceAll(RegExp(r'[^0-9,\\.]'), '');
     final normalizedText = digitsOnly.replaceAll(',', '.');
     final amount = double.tryParse(normalizedText);
 
@@ -61,6 +54,7 @@ class _TransactionSheetState extends State<TransactionSheet> {
     }
 
     final existing = widget.transaction;
+    final bloc = context.read<TransactionsBloc>();
 
     if (existing != null) {
       final updated = TransactionItem(
@@ -69,7 +63,7 @@ class _TransactionSheetState extends State<TransactionSheet> {
         note: _noteController.text,
         date: _selectedDate,
       );
-      await _updateTransaction(updated);
+      bloc.add(TransactionsEvent.updateTransactionRequested(updated));
     } else {
       final created = TransactionItem(
         id: DateTime.now().microsecondsSinceEpoch.toString(),
@@ -77,12 +71,10 @@ class _TransactionSheetState extends State<TransactionSheet> {
         note: _noteController.text,
         date: _selectedDate,
       );
-      await _addTransaction(created);
+      bloc.add(TransactionsEvent.addTransactionRequested(created));
     }
 
-    if (mounted) {
-      Navigator.of(context).pop(true);
-    }
+    Navigator.of(context).pop(true);
   }
 
   @override
@@ -179,4 +171,3 @@ class _TransactionSheetState extends State<TransactionSheet> {
     );
   }
 }
-
