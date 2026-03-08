@@ -17,9 +17,11 @@ import '../../features/auth/domain/repositories/auth_repository.dart' as _i4;
 import '../../features/auth/domain/usecases/sign_in_use_case.dart' as _i6;
 import '../../features/auth/domain/usecases/sign_in_with_apple_use_case.dart'
     as _i7;
-import '../../features/auth/domain/usecases/sign_out_use_case.dart' as _i8;
-import '../../features/auth/domain/usecases/sign_up_use_case.dart' as _i9;
-import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i10;
+import '../../features/auth/domain/usecases/sign_in_with_google_use_case.dart'
+    as _i8;
+import '../../features/auth/domain/usecases/sign_out_use_case.dart' as _i9;
+import '../../features/auth/domain/usecases/sign_up_use_case.dart' as _i10;
+import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i11;
 import '../network/supabase_client_provider.dart' as _i3;
 
 extension GetItInjectableX on _i1.GetIt {
@@ -41,15 +43,18 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i6.SignInUseCase(gh<_i4.AuthRepository>()));
     gh.lazySingleton<_i7.SignInWithAppleUseCase>(
         () => _i7.SignInWithAppleUseCase(gh<_i4.AuthRepository>()));
-    gh.lazySingleton<_i8.SignOutUseCase>(
-        () => _i8.SignOutUseCase(gh<_i4.AuthRepository>()));
-    gh.lazySingleton<_i9.SignUpUseCase>(
-        () => _i9.SignUpUseCase(gh<_i4.AuthRepository>()));
-    gh.factory<_i10.AuthBloc>(() => _i10.AuthBloc(
+    gh.lazySingleton<_i8.SignInWithGoogleUseCase>(
+        () => _i8.SignInWithGoogleUseCase(gh<_i4.AuthRepository>()));
+    gh.lazySingleton<_i9.SignOutUseCase>(
+        () => _i9.SignOutUseCase(gh<_i4.AuthRepository>()));
+    gh.lazySingleton<_i10.SignUpUseCase>(
+        () => _i10.SignUpUseCase(gh<_i4.AuthRepository>()));
+    gh.factory<_i11.AuthBloc>(() => _i11.AuthBloc(
           gh<_i6.SignInUseCase>(),
-          gh<_i9.SignUpUseCase>(),
-          gh<_i8.SignOutUseCase>(),
+          gh<_i10.SignUpUseCase>(),
+          gh<_i9.SignOutUseCase>(),
           gh<_i7.SignInWithAppleUseCase>(),
+          gh<_i8.SignInWithGoogleUseCase>(),
           gh<_i4.AuthRepository>(),
         ));
     return this;

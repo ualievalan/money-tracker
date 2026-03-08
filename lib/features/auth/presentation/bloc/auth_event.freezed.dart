@@ -22,6 +22,7 @@ mixin _$AuthEvent {
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) =>
       throw _privateConstructorUsedError;
@@ -31,6 +32,7 @@ mixin _$AuthEvent {
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) =>
       throw _privateConstructorUsedError;
@@ -40,6 +42,7 @@ mixin _$AuthEvent {
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) =>
@@ -51,6 +54,8 @@ mixin _$AuthEvent {
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) =>
       throw _privateConstructorUsedError;
@@ -61,6 +66,8 @@ mixin _$AuthEvent {
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) =>
       throw _privateConstructorUsedError;
@@ -71,6 +78,8 @@ mixin _$AuthEvent {
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) =>
@@ -173,6 +182,7 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) {
     return signInRequested(email, password);
@@ -185,6 +195,7 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) {
     return signInRequested?.call(email, password);
@@ -197,6 +208,7 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) {
@@ -214,6 +226,8 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) {
     return signInRequested(this);
@@ -227,6 +241,8 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) {
     return signInRequested?.call(this);
@@ -240,6 +256,8 @@ class _$AuthSignInRequestedImpl implements AuthSignInRequested {
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) {
@@ -341,6 +359,7 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) {
     return signUpRequested(email, password);
@@ -353,6 +372,7 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) {
     return signUpRequested?.call(email, password);
@@ -365,6 +385,7 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) {
@@ -382,6 +403,8 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) {
     return signUpRequested(this);
@@ -395,6 +418,8 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) {
     return signUpRequested?.call(this);
@@ -408,6 +433,8 @@ class _$AuthSignUpRequestedImpl implements AuthSignUpRequested {
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) {
@@ -473,6 +500,7 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) {
     return signOutRequested();
@@ -485,6 +513,7 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) {
     return signOutRequested?.call();
@@ -497,6 +526,7 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) {
@@ -514,6 +544,8 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) {
     return signOutRequested(this);
@@ -527,6 +559,8 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) {
     return signOutRequested?.call(this);
@@ -540,6 +574,8 @@ class _$AuthSignOutRequestedImpl implements AuthSignOutRequested {
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) {
@@ -600,6 +636,7 @@ class _$AuthSignInWithAppleRequestedImpl
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) {
     return signInWithAppleRequested();
@@ -612,6 +649,7 @@ class _$AuthSignInWithAppleRequestedImpl
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) {
     return signInWithAppleRequested?.call();
@@ -624,6 +662,7 @@ class _$AuthSignInWithAppleRequestedImpl
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) {
@@ -641,6 +680,8 @@ class _$AuthSignInWithAppleRequestedImpl
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) {
     return signInWithAppleRequested(this);
@@ -654,6 +695,8 @@ class _$AuthSignInWithAppleRequestedImpl
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) {
     return signInWithAppleRequested?.call(this);
@@ -667,6 +710,8 @@ class _$AuthSignInWithAppleRequestedImpl
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) {
@@ -680,6 +725,143 @@ class _$AuthSignInWithAppleRequestedImpl
 abstract class AuthSignInWithAppleRequested implements AuthEvent {
   const factory AuthSignInWithAppleRequested() =
       _$AuthSignInWithAppleRequestedImpl;
+}
+
+/// @nodoc
+abstract class _$$AuthSignInWithGoogleRequestedImplCopyWith<$Res> {
+  factory _$$AuthSignInWithGoogleRequestedImplCopyWith(
+          _$AuthSignInWithGoogleRequestedImpl value,
+          $Res Function(_$AuthSignInWithGoogleRequestedImpl) then) =
+      __$$AuthSignInWithGoogleRequestedImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$AuthSignInWithGoogleRequestedImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthSignInWithGoogleRequestedImpl>
+    implements _$$AuthSignInWithGoogleRequestedImplCopyWith<$Res> {
+  __$$AuthSignInWithGoogleRequestedImplCopyWithImpl(
+      _$AuthSignInWithGoogleRequestedImpl _value,
+      $Res Function(_$AuthSignInWithGoogleRequestedImpl) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$AuthSignInWithGoogleRequestedImpl
+    implements AuthSignInWithGoogleRequested {
+  const _$AuthSignInWithGoogleRequestedImpl();
+
+  @override
+  String toString() {
+    return 'AuthEvent.signInWithGoogleRequested()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthSignInWithGoogleRequestedImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String email, String password) signInRequested,
+    required TResult Function(String email, String password) signUpRequested,
+    required TResult Function() signOutRequested,
+    required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
+    required TResult Function() authStateChanged,
+  }) {
+    return signInWithGoogleRequested();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String email, String password)? signInRequested,
+    TResult? Function(String email, String password)? signUpRequested,
+    TResult? Function()? signOutRequested,
+    TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
+    TResult? Function()? authStateChanged,
+  }) {
+    return signInWithGoogleRequested?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String email, String password)? signInRequested,
+    TResult Function(String email, String password)? signUpRequested,
+    TResult Function()? signOutRequested,
+    TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
+    TResult Function()? authStateChanged,
+    required TResult orElse(),
+  }) {
+    if (signInWithGoogleRequested != null) {
+      return signInWithGoogleRequested();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthSignInRequested value) signInRequested,
+    required TResult Function(AuthSignUpRequested value) signUpRequested,
+    required TResult Function(AuthSignOutRequested value) signOutRequested,
+    required TResult Function(AuthSignInWithAppleRequested value)
+        signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
+    required TResult Function(AuthStateChanged value) authStateChanged,
+  }) {
+    return signInWithGoogleRequested(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthSignInRequested value)? signInRequested,
+    TResult? Function(AuthSignUpRequested value)? signUpRequested,
+    TResult? Function(AuthSignOutRequested value)? signOutRequested,
+    TResult? Function(AuthSignInWithAppleRequested value)?
+        signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
+    TResult? Function(AuthStateChanged value)? authStateChanged,
+  }) {
+    return signInWithGoogleRequested?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthSignInRequested value)? signInRequested,
+    TResult Function(AuthSignUpRequested value)? signUpRequested,
+    TResult Function(AuthSignOutRequested value)? signOutRequested,
+    TResult Function(AuthSignInWithAppleRequested value)?
+        signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
+    TResult Function(AuthStateChanged value)? authStateChanged,
+    required TResult orElse(),
+  }) {
+    if (signInWithGoogleRequested != null) {
+      return signInWithGoogleRequested(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthSignInWithGoogleRequested implements AuthEvent {
+  const factory AuthSignInWithGoogleRequested() =
+      _$AuthSignInWithGoogleRequestedImpl;
 }
 
 /// @nodoc
@@ -724,6 +906,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     required TResult Function(String email, String password) signUpRequested,
     required TResult Function() signOutRequested,
     required TResult Function() signInWithAppleRequested,
+    required TResult Function() signInWithGoogleRequested,
     required TResult Function() authStateChanged,
   }) {
     return authStateChanged();
@@ -736,6 +919,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult? Function(String email, String password)? signUpRequested,
     TResult? Function()? signOutRequested,
     TResult? Function()? signInWithAppleRequested,
+    TResult? Function()? signInWithGoogleRequested,
     TResult? Function()? authStateChanged,
   }) {
     return authStateChanged?.call();
@@ -748,6 +932,7 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult Function(String email, String password)? signUpRequested,
     TResult Function()? signOutRequested,
     TResult Function()? signInWithAppleRequested,
+    TResult Function()? signInWithGoogleRequested,
     TResult Function()? authStateChanged,
     required TResult orElse(),
   }) {
@@ -765,6 +950,8 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     required TResult Function(AuthSignOutRequested value) signOutRequested,
     required TResult Function(AuthSignInWithAppleRequested value)
         signInWithAppleRequested,
+    required TResult Function(AuthSignInWithGoogleRequested value)
+        signInWithGoogleRequested,
     required TResult Function(AuthStateChanged value) authStateChanged,
   }) {
     return authStateChanged(this);
@@ -778,6 +965,8 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult? Function(AuthSignOutRequested value)? signOutRequested,
     TResult? Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult? Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult? Function(AuthStateChanged value)? authStateChanged,
   }) {
     return authStateChanged?.call(this);
@@ -791,6 +980,8 @@ class _$AuthStateChangedImpl implements AuthStateChanged {
     TResult Function(AuthSignOutRequested value)? signOutRequested,
     TResult Function(AuthSignInWithAppleRequested value)?
         signInWithAppleRequested,
+    TResult Function(AuthSignInWithGoogleRequested value)?
+        signInWithGoogleRequested,
     TResult Function(AuthStateChanged value)? authStateChanged,
     required TResult orElse(),
   }) {
