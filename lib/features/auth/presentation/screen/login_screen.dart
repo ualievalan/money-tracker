@@ -4,6 +4,7 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
+import 'package:money_tracker/features/auth/presentation/widgets/google_icon.dart';
 
 /// Login / Sign-up page.
 ///
@@ -149,6 +150,32 @@ class _LoginScreenState extends State<LoginScreen> {
                               : () => context
                                       .read<AuthBloc>()
                                       .add(const AuthEvent.signInWithAppleRequested()),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 52,
+                        child: OutlinedButton.icon(
+                          onPressed: isLoading
+                              ? null
+                              : () => context
+                                      .read<AuthBloc>()
+                                      .add(const AuthEvent.signInWithGoogleRequested()),
+                          icon: const GoogleIcon(size: 22),
+                          label: const Text(
+                            'Продолжить с Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.grey.shade300),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                         ),
                       ),
                     ],
