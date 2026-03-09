@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
-import 'package:money_tracker/features/transactions/domain/transaction.dart';
-import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
+import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_event.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final TransactionItem? transaction;
@@ -39,11 +40,14 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   }
 
   Future<void> _save() async {
-    final amount = double.tryParse(_amountController.text);
+    final rawText = _amountController.text.trim();
+    final normalizedText = rawText.replaceAll(',', '.');
+    final amount = double.tryParse(normalizedText);
 
     if (amount == null || amount <= 0) return;
 
     final transaction = widget.transaction;
+    final bloc = context.read<TransactionsBloc>();
 
     if (transaction != null) {
       final updatedTransaction = TransactionItem(
@@ -52,8 +56,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         note: _noteController.text,
         date: transaction.date,
       );
-
-      await TransactionsStorage.update(updatedTransaction);
+      bloc.add(TransactionsEvent.updateTransactionRequested(updatedTransaction));
     } else {
       final newTransaction = TransactionItem(
         id: Random().nextInt(999999).toString(),
@@ -61,11 +64,12 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         note: _noteController.text,
         date: DateTime.now(),
       );
-
-      await TransactionsStorage.add(newTransaction);
+      bloc.add(TransactionsEvent.addTransactionRequested(newTransaction));
     }
 
-    await context.read<AchievementsCubit>().onTransactionAdded(DateTime.now());
+    await context
+        .read<AchievementsCubit>()
+        .onTransactionAdded(DateTime.now());
 
     if (mounted) {
       Navigator.pop(context, true);

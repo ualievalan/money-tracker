@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/di/injection.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
@@ -13,17 +14,17 @@ import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 import 'package:money_tracker/features/auth/presentation/screen/login_screen.dart';
+import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 import 'package:money_tracker/core/theme/app_theme.dart';
-import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
 import 'package:money_tracker/features/welcome/presentation/welcome_screen.dart';
 import 'package:money_tracker/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await TransactionsStorage.load();
+  await initializeDateFormatting('ru');
 
   // Load environment variables from .env asset.
   await dotenv.load(fileName: '.env');
@@ -61,6 +62,9 @@ class MoneyTrackerApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => AchievementsCubit()..checkStreaksOnAppStart(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<TransactionsBloc>(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
