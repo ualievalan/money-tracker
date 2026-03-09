@@ -22,6 +22,7 @@ class AppLocalizations {
       'home': 'Главная',
       'transactions': 'Транзакции',
       'tasks': 'Задачи',
+      'achievements': 'Ачивки',
       'settings': 'Настройки',
       'change_name': 'Изменить имя',
       'dark_theme': 'Тёмная тема',
@@ -72,6 +73,22 @@ class AppLocalizations {
       'notifications_enable': 'Включить уведомления',
       'notifications_time': 'Время уведомлений',
       'notifications_off': 'Уведомления отключены',
+      'achievements_title': 'Ваши достижения',
+      'achievements_subtitle': 'Продолжайте в том же духе!',
+      'achievement_seven_days_no_overspend_title':
+          '7 дней без перерасхода',
+      'achievement_seven_days_no_overspend_subtitle':
+          'Держите расходы под контролем неделю подряд.',
+      'achievement_one_month_in_plus_title':
+          'Месяц в плюсе',
+      'achievement_one_month_in_plus_subtitle':
+          'Завершите месяц без минуса по бюджету.',
+      'achievement_ten_tasks_title': '10 задач выполнено',
+      'achievement_ten_tasks_subtitle':
+          'Закройте 10 задач со статусом \"выполнено\".',
+      'transaction_streak_title': 'Серия по учёту трат',
+      'transaction_streak_subtitle': 'Дней подряд: {days}',
+      'achievement_unlocked': 'Достижение получено!',
     },
     'kk': {
       'app_title': 'Money Tracker',
@@ -79,6 +96,7 @@ class AppLocalizations {
       'home': 'Басты бет',
       'transactions': 'Транзакциялар',
       'tasks': 'Тапсырмалар',
+      'achievements': 'Жетістіктер',
       'settings': 'Баптаулар',
       'change_name': 'Атын өзгерту',
       'dark_theme': 'Қараңғы тақырып',
@@ -129,6 +147,22 @@ class AppLocalizations {
       'notifications_enable': 'Хабарламаларды қосу',
       'notifications_time': 'Хабарлама уақыты',
       'notifications_off': 'Хабарламалар сөндірілген',
+      'achievements_title': 'Сіздің жетістіктеріңіз',
+      'achievements_subtitle': 'Осы қарқынды сақтаңыз!',
+      'achievement_seven_days_no_overspend_title':
+          '7 күн артық шығынсыз',
+      'achievement_seven_days_no_overspend_subtitle':
+          'Шығындарыңызды бір апта бойы бақылауда ұстаңыз.',
+      'achievement_one_month_in_plus_title':
+          'Айды плюсте аяқтаңыз',
+      'achievement_one_month_in_plus_subtitle':
+          'Ай соңын бюджет минуссыз аяқтаңыз.',
+      'achievement_ten_tasks_title': '10 тапсырма орындалды',
+      'achievement_ten_tasks_subtitle':
+          'Статусы \"орындалды\" болатын 10 тапсырманы жабыңыз.',
+      'transaction_streak_title': 'Шығындар сериясы',
+      'transaction_streak_subtitle': 'Кезектескен күндер: {days}',
+      'achievement_unlocked': 'Жетістік ашылды!',
     },
     'en': {
       'app_title': 'Money Tracker',
@@ -136,6 +170,7 @@ class AppLocalizations {
       'home': 'Home',
       'transactions': 'Transactions',
       'tasks': 'Tasks',
+      'achievements': 'Achievements',
       'settings': 'Settings',
       'change_name': 'Edit name',
       'dark_theme': 'Dark theme',
@@ -185,6 +220,22 @@ class AppLocalizations {
       'notifications_enable': 'Enable notifications',
       'notifications_time': 'Notification time',
       'notifications_off': 'Notifications are off',
+      'achievements_title': 'Your achievements',
+      'achievements_subtitle': 'Keep up the great work!',
+      'achievement_seven_days_no_overspend_title':
+          '7 days without overspending',
+      'achievement_seven_days_no_overspend_subtitle':
+          'Keep your spending under control for a whole week.',
+      'achievement_one_month_in_plus_title':
+          'One month in the plus',
+      'achievement_one_month_in_plus_subtitle':
+          'Finish the month without going negative in your budget.',
+      'achievement_ten_tasks_title': '10 tasks completed',
+      'achievement_ten_tasks_subtitle':
+          'Complete 10 tasks with the \"done\" status.',
+      'transaction_streak_title': 'Spending streak',
+      'transaction_streak_subtitle': 'Days in a row: {days}',
+      'achievement_unlocked': 'Achievement unlocked!',
     },
   };
 
@@ -200,6 +251,7 @@ class AppLocalizations {
   String get transactions => _text('transactions');
   String get tasks => _text('tasks');
   String get settings => _text('settings');
+  String get achievements => _text('achievements');
   String get changeName => _text('change_name');
   String get darkTheme => _text('dark_theme');
   String get logout => _text('logout');
@@ -248,6 +300,27 @@ class AppLocalizations {
   String get notificationsEnable => _text('notifications_enable');
   String get notificationsTime => _text('notifications_time');
   String get notificationsOff => _text('notifications_off');
+  String get achievementsTitle => _text('achievements_title');
+  String get achievementsSubtitle => _text('achievements_subtitle');
+  String get achievementSevenDaysNoOverspendTitle =>
+      _text('achievement_seven_days_no_overspend_title');
+  String get achievementSevenDaysNoOverspendSubtitle =>
+      _text('achievement_seven_days_no_overspend_subtitle');
+  String get achievementOneMonthInPlusTitle =>
+      _text('achievement_one_month_in_plus_title');
+  String get achievementOneMonthInPlusSubtitle =>
+      _text('achievement_one_month_in_plus_subtitle');
+  String get achievementTenTasksTitle =>
+      _text('achievement_ten_tasks_title');
+  String get achievementTenTasksSubtitle =>
+      _text('achievement_ten_tasks_subtitle');
+  String transactionStreakSubtitle(int days) {
+    final template = _text('transaction_streak_subtitle');
+    return template.replaceFirst('{days}', '$days');
+  }
+  String get transactionStreakTitle =>
+      _text('transaction_streak_title');
+  String get achievementUnlocked => _text('achievement_unlocked');
 }
 
 class AppLocalizationsDelegate

@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/transactions/domain/transaction.dart';
 import 'package:money_tracker/features/transactions/data/transactions_storage.dart';
@@ -62,6 +64,8 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
       await TransactionsStorage.add(newTransaction);
     }
+
+    await context.read<AchievementsCubit>().onTransactionAdded(DateTime.now());
 
     if (mounted) {
       Navigator.pop(context, true);

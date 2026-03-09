@@ -5,6 +5,7 @@ import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/core/localization/locale_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
+import 'package:money_tracker/features/achievements/presentation/achievements_bottom_sheet.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/settings/presentation/screen/settings_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
@@ -156,12 +157,12 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _currentIndex == 0
-              ? loc.home
-              : (_currentIndex == 1 ? loc.tasks : loc.transactions),
+          title: Text(
+            _currentIndex == 0
+                ? loc.home
+                : (_currentIndex == 1 ? loc.tasks : loc.transactions),
+          ),
         ),
-      ),
       drawer: Drawer(
         backgroundColor: isDark
             ? const Color(0xFF1C1C1E)
@@ -327,6 +328,16 @@ class _MainScreenState extends State<MainScreen> {
                           );
                         },
                       ),
+                      _buildDivider(isDark),
+                      _buildDrawerItem(
+                        icon: Icons.emoji_events_rounded,
+                        title: loc.achievements,
+                        isDark: isDark,
+                        onTap: () {
+                          Navigator.pop(context);
+                          AchievementsBottomSheet.show(context);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -432,19 +443,19 @@ class _MainScreenState extends State<MainScreen> {
         },
         children: _screens,
       ),
-      bottomNavigationBar: AppleBottomNavBar(
-        currentIndex: _currentIndex,
-        isDark: isDark,
-        onTap: (index) {
-          HapticFeedback.lightImpact();
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-      ),
-    );
+        bottomNavigationBar: AppleBottomNavBar(
+          currentIndex: _currentIndex,
+          isDark: isDark,
+          onTap: (index) {
+            HapticFeedback.lightImpact();
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+        ),
+      );
   }
 
   Widget _buildDrawerItem({

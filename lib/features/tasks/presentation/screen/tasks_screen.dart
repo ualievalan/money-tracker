@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,11 +33,13 @@ class _TasksScreenState extends State<TasksScreen> {
         ..clear()
         ..addAll(decoded.map((e) => Map<String, dynamic>.from(e)));
     });
+    _updateAchievements();
   }
 
   Future<void> _saveTasks() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('tasks', jsonEncode(tasks));
+    await _updateAchievements();
   }
 
   @override
@@ -94,6 +98,11 @@ class _TasksScreenState extends State<TasksScreen> {
         },
       ),
     );
+  }
+
+  Future<void> _updateAchievements() async {
+    if (!mounted) return;
+    await context.read<AchievementsCubit>().onTasksUpdated(tasks);
   }
 
   void _showAddTaskDialog() {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/di/injection.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/core/localization/locale_cubit.dart';
@@ -57,6 +58,9 @@ class MoneyTrackerApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => SettingsCubit(),
+        ),
+        BlocProvider(
+          create: (_) => AchievementsCubit()..checkStreaksOnAppStart(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
