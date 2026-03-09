@@ -8,6 +8,7 @@ import 'package:money_tracker/features/auth/domain/usecases/sign_in_use_case.dar
 import 'package:money_tracker/features/auth/domain/usecases/sign_out_use_case.dart';
 import 'package:money_tracker/features/auth/domain/usecases/sign_up_use_case.dart';
 import 'package:money_tracker/features/auth/domain/usecases/sign_in_with_apple_use_case.dart';
+import 'package:money_tracker/features/auth/domain/usecases/sign_in_with_google_use_case.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 
@@ -18,12 +19,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._signUp,
     this._signOut,
     this._signInWithApple,
+    this._signInWithGoogle,
     this._repository,
   ) : super(const AuthState.initial()) {
     on<AuthSignInRequested>(_onSignIn);
     on<AuthSignUpRequested>(_onSignUp);
     on<AuthSignOutRequested>(_onSignOut);
     on<AuthSignInWithAppleRequested>(_onSignInWithApple);
+    on<AuthSignInWithGoogleRequested>(_onSignInWithGoogle);
     on<AuthStateChanged>(_onAuthStateChanged);
 
     // Immediately reflect the current auth state on BLoC creation.
@@ -36,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignUpUseCase _signUp;
   final SignOutUseCase _signOut;
   final SignInWithAppleUseCase _signInWithApple;
+  final SignInWithGoogleUseCase _signInWithGoogle;
   final AuthRepository _repository;
   late final StreamSubscription<dynamic> _authSub;
 
@@ -69,6 +73,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthState.loading());
     final result = await _signInWithApple();
+    result.map(
+      onSuccess: (user) => emit(AuthState.authenticated(user)),
+      onError: (failure) => emit(AuthState.failure(failure)),
+    );
+  }
+
+  Future<void> _onSignInWithGoogle(
+    AuthSignInWithGoogleRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthState.loading());
+    final result = await _signInWithGoogle();
     result.map(
       onSuccess: (user) => emit(AuthState.authenticated(user)),
       onError: (failure) => emit(AuthState.failure(failure)),

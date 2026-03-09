@@ -22,6 +22,9 @@ sealed class AuthEvent with _$AuthEvent {
   /// Triggered when the user taps Sign In with Apple.
   const factory AuthEvent.signInWithAppleRequested() = AuthSignInWithAppleRequested;
 
+  /// Triggered when the user taps Sign In with Google.
+  const factory AuthEvent.signInWithGoogleRequested() = AuthSignInWithGoogleRequested;
+
   /// Triggered on startup or whenever auth state changes externally.
   const factory AuthEvent.authStateChanged() = AuthStateChanged;
 }

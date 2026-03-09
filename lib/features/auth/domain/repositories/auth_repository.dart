@@ -24,6 +24,9 @@ abstract interface class AuthRepository {
   /// Signs in with Apple ID.
   Future<Result<AuthEntity>> signInWithApple();
 
+  /// Signs in with Google account.
+  Future<Result<AuthEntity>> signInWithGoogle();
+
   /// Returns the currently authenticated user, or `null` if not logged in.
   AuthEntity? get currentUser;
 
