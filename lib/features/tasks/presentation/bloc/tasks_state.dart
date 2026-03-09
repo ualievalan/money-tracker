@@ -1,8 +1,11 @@
+import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
+
 class TasksState {
   const TasksState({required this.tasks});
-  final List<Map<String, dynamic>> tasks;
 
-  TasksState copyWith({List<Map<String, dynamic>>? tasks}) {
+  final List<TaskEntity> tasks;
+
+  TasksState copyWith({List<TaskEntity>? tasks}) {
     return TasksState(tasks: tasks ?? this.tasks);
   }
 }

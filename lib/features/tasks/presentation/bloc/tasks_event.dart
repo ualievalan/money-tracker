@@ -1,10 +1,23 @@
+import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
+
 abstract class TasksEvent {}
 
 class LoadTasks extends TasksEvent {}
 
 class AddTask extends TasksEvent {
-  AddTask(this.title);
+  AddTask({
+    required this.title,
+    this.deadline,
+    this.priority = TaskPriority.medium,
+    this.reminderAt,
+    this.repeat = TaskRepeat.none,
+  });
+
   final String title;
+  final DateTime? deadline;
+  final TaskPriority priority;
+  final DateTime? reminderAt;
+  final TaskRepeat repeat;
 }
 
 class EditTask extends TasksEvent {
