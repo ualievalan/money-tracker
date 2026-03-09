@@ -12,18 +12,19 @@ class TransactionItem {
   });
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'amount': amount,
-    'note': note,
-    'date': date.toIso8601String(),
-  };
+        'id': id,
+        'amount': amount,
+        'note': note,
+        'date': date.toIso8601String(),
+      };
 
   factory TransactionItem.fromJson(Map<String, dynamic> json) {
     return TransactionItem(
-      id: json['id'],
+      id: json['id'] as String,
       amount: (json['amount'] as num).toDouble(),
-      note: json['note'],
-      date: DateTime.parse(json['date']),
+      note: json['note'] as String,
+      date: DateTime.parse(json['date'] as String),
     );
   }
 }
+

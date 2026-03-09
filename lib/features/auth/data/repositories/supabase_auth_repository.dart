@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:math' as dart_math;
 import 'package:crypto/crypto.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:injectable/injectable.dart';
 import 'package:money_tracker/core/error/failure.dart';
@@ -10,10 +12,6 @@ import 'package:money_tracker/features/auth/domain/entities/auth_entity.dart';
 import 'package:money_tracker/features/auth/domain/repositories/auth_repository.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-/// Supabase-backed implementation of [AuthRepository].
-///
-/// All Supabase-specific types are contained here — Domain and Presentation
-/// layers never import from `supabase_flutter` directly.
 @LazySingleton(as: AuthRepository)
 class SupabaseAuthRepository implements AuthRepository {
   const SupabaseAuthRepository(this._provider);
@@ -110,6 +108,57 @@ class SupabaseAuthRepository implements AuthRepository {
     }
   }
 
+  @override
+  Future<Result<AuthEntity>> signInWithGoogle() async {
+    try {
+      final webClientId = dotenv.env['GOOGLE_WEB_CLIENT_ID'];
+      final iosClientId = dotenv.env['GOOGLE_IOS_CLIENT_ID'];
+
+      // Guard: если .env не содержит Google credentials (например, в CI не добавлены переменные),
+      // возвращаем понятную ошибку вместо краша внутри google_sign_in SDK.
+      if (webClientId == null || webClientId.isEmpty ||
+          iosClientId == null || iosClientId.isEmpty) {
+        return const Result.error(
+          AuthFailure('Google Sign-In не настроен: отсутствуют Client ID.'),
+        );
+      }
+
+      final googleSignIn = GoogleSignIn(
+        serverClientId: webClientId,
+        clientId: iosClientId,
+      );
+      final googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        return const Result.error(AuthFailure('Авторизация отменена пользователем.'));
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final accessToken = googleAuth.accessToken;
+      final idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        return const Result.error(AuthFailure('Google ID Token is null'));
+      }
+
+      final response = await _client.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: accessToken,
+      );
+
+      final user = response.user;
+      if (user == null) {
+        return const Result.error(AuthFailure('Не удалось войти через Google.'));
+      }
+      return Result.success(_mapUser(user));
+    } on AuthException catch (e) {
+      return Result.error(AuthFailure(e.message));
+    } catch (_) {
+      return const Result.error(ServerFailure());
+    }
+  }
+
   /// Вспомогательная функция для генерации nonce
   String _generateNonce([int length = 32]) {
     const charset = '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
@@ -142,7 +191,6 @@ class SupabaseAuthRepository implements AuthRepository {
         return user != null ? _mapUser(user) : null;
       });
 
-  /// Maps the Supabase [User] to a domain [AuthEntity].
   AuthEntity _mapUser(User user) =>
       AuthEntity(id: user.id, email: user.email ?? '');
 }
