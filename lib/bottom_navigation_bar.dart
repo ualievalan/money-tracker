@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 
 class AppleBottomNavBar extends StatelessWidget {
   const AppleBottomNavBar({
@@ -17,18 +18,19 @@ class AppleBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     final selectedColor = isDark ? Colors.white : Colors.black;
     final unselectedColor = isDark
         ? Colors.grey.shade600
         : Colors.grey.shade400;
 
     final glassColor = isDark
-        ? Colors.black.withOpacity(0.5)
-        : Colors.white.withOpacity(0.6);
+        ? Colors.black.withValues(alpha: 0.5)
+        : Colors.white.withValues(alpha: 0.6);
 
     final borderColor = isDark
-        ? Colors.white.withOpacity(0.15)
-        : Colors.black.withOpacity(0.05);
+        ? Colors.white.withValues(alpha: 0.15)
+        : Colors.black.withValues(alpha: 0.05);
 
     return SafeArea(
       bottom: true,
@@ -74,7 +76,7 @@ class AppleBottomNavBar extends StatelessWidget {
                   children: [
                     _NavItem(
                       icon: Icons.home_rounded,
-                      label: 'Главная',
+                      label: loc.home,
                       isSelected: currentIndex == 0,
                       selectedColor: selectedColor,
                       unselectedColor: unselectedColor,
@@ -85,7 +87,7 @@ class AppleBottomNavBar extends StatelessWidget {
                     ),
                     _NavItem(
                       icon: Icons.check_circle_outline_rounded,
-                      label: 'Дела',
+                      label: loc.tasks,
                       isSelected: currentIndex == 1,
                       selectedColor: selectedColor,
                       unselectedColor: unselectedColor,
@@ -96,7 +98,7 @@ class AppleBottomNavBar extends StatelessWidget {
                     ),
                     _NavItem(
                       icon: Icons.account_balance_wallet_rounded,
-                      label: 'Расходы',
+                      label: loc.transactions,
                       isSelected: currentIndex == 2,
                       selectedColor: selectedColor,
                       unselectedColor: unselectedColor,
@@ -147,7 +149,7 @@ class _NavItem extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isSelected
-              ? selectedColor.withOpacity(0.1)
+              ? selectedColor.withValues(alpha: 0.1)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
