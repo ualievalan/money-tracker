@@ -111,21 +111,15 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   Future<Result<AuthEntity>> signInWithGoogle() async {
     try {
-      final webClientId = dotenv.env['GOOGLE_WEB_CLIENT_ID'];
-      final iosClientId = dotenv.env['GOOGLE_IOS_CLIENT_ID'];
-
-      // Guard: если .env не содержит Google credentials (например, в CI не добавлены переменные),
-      // возвращаем понятную ошибку вместо краша внутри google_sign_in SDK.
-      if (webClientId == null || webClientId.isEmpty ||
-          iosClientId == null || iosClientId.isEmpty) {
-        return const Result.error(
-          AuthFailure('Google Sign-In не настроен: отсутствуют Client ID.'),
-        );
-      }
+      // On iOS, google_sign_in reads GIDClientID directly from Info.plist,
+      // so clientId is NOT required here. Only serverClientId (webClientId)
+      // is needed to obtain an ID token for Supabase authentication.
+      final webClientId = dotenv.maybeGet('GOOGLE_WEB_CLIENT_ID');
 
       final googleSignIn = GoogleSignIn(
+        // serverClientId is the Web OAuth client ID needed to get an idToken
+        // that Supabase can verify. Falls back gracefully if not set.
         serverClientId: webClientId,
-        clientId: iosClientId,
       );
       final googleUser = await googleSignIn.signIn();
 

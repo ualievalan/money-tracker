@@ -18,10 +18,10 @@ import '../../features/auth/domain/usecases/sign_in_use_case.dart' as _i12;
 import '../../features/auth/domain/usecases/sign_in_with_apple_use_case.dart'
     as _i13;
 import '../../features/auth/domain/usecases/sign_in_with_google_use_case.dart'
-    as _i14;
-import '../../features/auth/domain/usecases/sign_out_use_case.dart' as _i15;
-import '../../features/auth/domain/usecases/sign_up_use_case.dart' as _i16;
-import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i18;
+    as _i16;
+import '../../features/auth/domain/usecases/sign_out_use_case.dart' as _i14;
+import '../../features/auth/domain/usecases/sign_up_use_case.dart' as _i15;
+import '../../features/auth/presentation/bloc/auth_bloc.dart' as _i17;
 import '../../features/transactions/data/repositories/shared_prefs_transactions_repository.dart'
     as _i5;
 import '../../features/transactions/domain/repositories/transactions_repository.dart'
@@ -35,7 +35,7 @@ import '../../features/transactions/domain/usecases/get_transactions_use_case.da
 import '../../features/transactions/domain/usecases/update_transaction_use_case.dart'
     as _i6;
 import '../../features/transactions/presentation/bloc/transactions_bloc.dart'
-    as _i17;
+    as _i18;
 import '../network/supabase_client_provider.dart' as _i3;
 
 extension GetItInjectableX on _i1.GetIt {
@@ -67,24 +67,24 @@ extension GetItInjectableX on _i1.GetIt {
         () => _i12.SignInUseCase(gh<_i8.AuthRepository>()));
     gh.lazySingleton<_i13.SignInWithAppleUseCase>(
         () => _i13.SignInWithAppleUseCase(gh<_i8.AuthRepository>()));
-    gh.lazySingleton<_i14.SignInWithGoogleUseCase>(
-        () => _i14.SignInWithGoogleUseCase(gh<_i8.AuthRepository>()));
-    gh.lazySingleton<_i15.SignOutUseCase>(
-        () => _i15.SignOutUseCase(gh<_i8.AuthRepository>()));
-    gh.lazySingleton<_i16.SignUpUseCase>(
-        () => _i16.SignUpUseCase(gh<_i8.AuthRepository>()));
-    gh.factory<_i17.TransactionsBloc>(() => _i17.TransactionsBloc(
+    gh.lazySingleton<_i14.SignOutUseCase>(
+        () => _i14.SignOutUseCase(gh<_i8.AuthRepository>()));
+    gh.lazySingleton<_i15.SignUpUseCase>(
+        () => _i15.SignUpUseCase(gh<_i8.AuthRepository>()));
+    gh.lazySingleton<_i16.SignInWithGoogleUseCase>(
+        () => _i16.SignInWithGoogleUseCase(gh<_i8.AuthRepository>()));
+    gh.factory<_i18.TransactionsBloc>(() => _i18.TransactionsBloc(
           gh<_i11.GetTransactionsUseCase>(),
           gh<_i7.AddTransactionUseCase>(),
           gh<_i6.UpdateTransactionUseCase>(),
           gh<_i10.DeleteTransactionUseCase>(),
         ));
-    gh.factory<_i18.AuthBloc>(() => _i18.AuthBloc(
+    gh.factory<_i17.AuthBloc>(() => _i17.AuthBloc(
           gh<_i12.SignInUseCase>(),
-          gh<_i16.SignUpUseCase>(),
-          gh<_i15.SignOutUseCase>(),
+          gh<_i15.SignUpUseCase>(),
+          gh<_i14.SignOutUseCase>(),
           gh<_i13.SignInWithAppleUseCase>(),
-          gh<_i14.SignInWithGoogleUseCase>(),
+          gh<_i16.SignInWithGoogleUseCase>(),
           gh<_i8.AuthRepository>(),
         ));
     return this;
