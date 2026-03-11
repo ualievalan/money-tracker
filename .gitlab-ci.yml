@@ -110,14 +110,15 @@ release:android:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
       when: manual
 
-# Общая подготовка для iOS (Flutter через FVM или системный, .env, CocoaPods)
+# Общая подготовка для iOS (.env, Flutter build, CocoaPods)
 .ios:before_script: &ios_before_script
   - export PATH="/opt/homebrew/bin:$PATH:$HOME/development/flutter/bin"
   - cd $CI_PROJECT_DIR
-  - if command -v fvm >/dev/null 2>&1 && [ -f .fvmrc ]; then fvm install && export PATH="$CI_PROJECT_DIR/.fvm/flutter_sdk/bin:$PATH"; fi
+  - if command -v fvm > /dev/null 2>&1 && [ -f .fvmrc ]; then fvm install && export PATH="$CI_PROJECT_DIR/.fvm/flutter_sdk/bin:$PATH"; fi
   - flutter clean
   - flutter pub get
-  - flutter build ios --config-only --release --build-number=$BUILD_NUMBER
+  # ⚠️ .env создаётся ДО flutter build — он бандлится как asset.
+  # Если создать ПОСЛЕ — в сборку попадёт пустой .env, Google Sign-In упадёт.
   - |
     if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
       echo "❌ ОШИБКА: SUPABASE_URL или SUPABASE_ANON_KEY не заданы в GitLab CI/CD Variables!"
@@ -127,6 +128,7 @@ release:android:
       "$SUPABASE_URL" "$SUPABASE_ANON_KEY" "$GOOGLE_IOS_CLIENT_ID" "$GOOGLE_WEB_CLIENT_ID" \
       > $CI_PROJECT_DIR/.env
     echo "✅ .env файл создан (SUPABASE + GOOGLE)"
+  - flutter build ios --config-only --release --build-number=$BUILD_NUMBER
   - cd ios
   - bundle install --path vendor/bundle
   - pod install --repo-update
