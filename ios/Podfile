@@ -39,5 +39,20 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    target.build_configurations.each do |config|
+      # Prevent third-party pod warnings from being treated as errors.
+      # Needed because sign_in_with_apple 7.0.1 has a non-exhaustive switch
+      # on ASAuthorizationError.Code which gains new cases in iOS 26 SDK.
+      config.build_settings['SWIFT_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+      config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = 'NO'
+
+      # Ensure all pods meet the minimum iOS deployment target (13.0).
+      # Avoids "IPHONEOS_DEPLOYMENT_TARGET is set to 9.0/10.0" warnings
+      # that can cause issues with newer Xcode SDK versions.
+      if config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'].to_f < 13.0
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      end
+    end
   end
 end
