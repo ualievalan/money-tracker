@@ -14,3 +14,4 @@ final GetIt getIt = GetIt.instance;
   asExtension: true,
 )
 Future<void> configureDependencies() async => getIt.init();
+
