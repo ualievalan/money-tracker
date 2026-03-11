@@ -77,5 +77,10 @@
 			</array>
 		</dict>
 	</array>
+	<!-- GIDClientID: iOS OAuth client ID for google_sign_in plugin.
+	     This is the canonical way to configure Google Sign-In on iOS
+	     and avoids relying on .env which may not be bundled in CI builds. -->
+	<key>GIDClientID</key>
+	<string>1086841482634-m6vsn6t4otab91rmh8p3as2pvin77i9u.apps.googleusercontent.com</string>
 </dict>
 </plist>
