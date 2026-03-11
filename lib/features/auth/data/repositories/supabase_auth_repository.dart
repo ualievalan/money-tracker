@@ -111,14 +111,22 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   Future<Result<AuthEntity>> signInWithGoogle() async {
     try {
-      // On iOS, google_sign_in reads GIDClientID directly from Info.plist,
-      // so clientId is NOT required here. Only serverClientId (webClientId)
-      // is needed to obtain an ID token for Supabase authentication.
-      final webClientId = dotenv.maybeGet('GOOGLE_WEB_CLIENT_ID');
+      // Web Client ID is required so that the Google ID token contains the
+      // correct `aud` (audience) claim that Supabase validates.
+      // Without it, only the iOS client ID appears in `aud` → Supabase throws
+      // "Unacceptable audience in id_token".
+      //
+      // We read from .env first (for flexibility), then fall back to a
+      // hardcoded value. The Web Client ID is NOT secret — it is a public
+      // OAuth 2.0 client identifier compiled into every client binary.
+      const _webClientIdFallback =
+          '1086841482634-m5pj8lf0pnfv01fsun5eilmkdif3cs4v.apps.googleusercontent.com';
+      final webClientId =
+          dotenv.maybeGet('GOOGLE_WEB_CLIENT_ID') ?? _webClientIdFallback;
 
       final googleSignIn = GoogleSignIn(
-        // serverClientId is the Web OAuth client ID needed to get an idToken
-        // that Supabase can verify. Falls back gracefully if not set.
+        // On iOS, GIDClientID from Info.plist is used automatically.
+        // serverClientId ensures the returned idToken has webClientId in `aud`.
         serverClientId: webClientId,
       );
       final googleUser = await googleSignIn.signIn();
