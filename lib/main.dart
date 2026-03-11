@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/di/injection.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
+import 'package:money_tracker/core/localization/locale_cubit.dart';
+import 'package:money_tracker/core/settings/settings_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
@@ -45,23 +51,85 @@ class MoneyTrackerApp extends StatelessWidget {
           create: (_) =>
               getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
         ),
-        BlocProvider(create: (_) => ThemeCubit()),
-        BlocProvider(create: (_) => getIt<TransactionsBloc>()),
+        BlocProvider(
+          create: (_) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (_) => LocaleCubit(),
+        ),
+        BlocProvider(
+          create: (_) => SettingsCubit(),
+        ),
+        BlocProvider(
+          create: (_) => AchievementsCubit()..checkStreaksOnAppStart(),
+        ),
+        BlocProvider(
+          create: (_) => getIt<TransactionsBloc>(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
-            title: 'Money Tracker',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeMode,
-            home: const AppNavigator(),
+          return BlocBuilder<LocaleCubit, Locale>(
+            builder: (context, locale) {
+              return BlocBuilder<SettingsCubit, SettingsState>(
+                builder: (context, settings) {
+                  final light = _applyTextSettings(
+                    AppTheme.lightTheme,
+                    settings,
+                  );
+                  final dark = _applyTextSettings(
+                    AppTheme.darkTheme,
+                    settings,
+                  );
+
+                  return MaterialApp(
+                    title: 'Money Tracker',
+                    debugShowCheckedModeBanner: false,
+                    theme: light,
+                    darkTheme: dark,
+                    themeMode: themeMode,
+                    locale: locale,
+                    supportedLocales: AppLocalizations.supportedLocales,
+                    localizationsDelegates: const [
+                      AppLocalizationsDelegate(),
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                    ],
+                    builder: (context, child) {
+                      final mediaQuery = MediaQuery.of(context);
+                      return MediaQuery(
+                        data: mediaQuery.copyWith(
+                          textScaler:
+                              TextScaler.linear(settings.fontScale),
+                        ),
+                        child: child ?? const SizedBox.shrink(),
+                      );
+                    },
+                    home: const AppNavigator(),
+                  );
+                },
+              );
+            },
           );
         },
       ),
     );
   }
+}
+
+ThemeData _applyTextSettings(ThemeData base, SettingsState settings) {
+  TextTheme textTheme;
+
+  if (settings.fontFamily == AppFontFamily.inter) {
+    textTheme = GoogleFonts.interTextTheme(base.textTheme);
+  } else if (settings.fontFamily == AppFontFamily.roboto) {
+    textTheme = GoogleFonts.robotoTextTheme(base.textTheme);
+  } else {
+    textTheme = GoogleFonts.montserratTextTheme(base.textTheme);
+  }
+
+  return base.copyWith(textTheme: textTheme);
 }
 
 class AppNavigator extends StatefulWidget {

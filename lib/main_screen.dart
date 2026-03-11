@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:money_tracker/bottom_navigation_bar.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
+import 'package:money_tracker/core/localization/locale_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
+import 'package:money_tracker/features/achievements/presentation/achievements_bottom_sheet.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
+import 'package:money_tracker/features/settings/presentation/screen/settings_screen.dart';
 import 'package:money_tracker/features/tasks/presentation/screen/tasks_screen.dart';
 import 'package:money_tracker/features/transactions/presentation/transactions_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -43,16 +47,17 @@ class _MainScreenState extends State<MainScreen> {
     showDialog(
       context: context,
       builder: (context) {
+        final loc = AppLocalizations.of(context);
         return AlertDialog(
-          title: const Text('Введите имя'),
+          title: Text(loc.enterName),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(hintText: 'Ваше имя'),
+            decoration: InputDecoration(hintText: loc.yourName),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
+              child: Text(loc.cancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -62,15 +67,73 @@ class _MainScreenState extends State<MainScreen> {
                     UserAttributes(data: {'firstName': name}),
                   );
 
-                  if (!mounted) return;
+                  if (!context.mounted) return;
 
                   setState(() {});
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Сохранить'),
+              child: Text(loc.save),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  void _showLanguageBottomSheet(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+    final localeCubit = context.read<LocaleCubit>();
+    final currentCode = localeCubit.state.languageCode;
+
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text(
+                  loc.selectLanguage,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              RadioListTile<String>(
+                value: 'ru',
+                groupValue: currentCode,
+                title: Text(loc.languageRussian),
+                onChanged: (value) {
+                  if (value == null) return;
+                  localeCubit.setLocale(const Locale('ru'));
+                  Navigator.pop(context);
+                },
+              ),
+              RadioListTile<String>(
+                value: 'kk',
+                groupValue: currentCode,
+                title: Text(loc.languageKazakh),
+                onChanged: (value) {
+                  if (value == null) return;
+                  localeCubit.setLocale(const Locale('kk'));
+                  Navigator.pop(context);
+                },
+              ),
+              RadioListTile<String>(
+                value: 'en',
+                groupValue: currentCode,
+                title: Text(loc.languageEnglish),
+                onChanged: (value) {
+                  if (value == null) return;
+                  localeCubit.setLocale(const Locale('en'));
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
@@ -83,6 +146,8 @@ class _MainScreenState extends State<MainScreen> {
       return const SizedBox.shrink();
     }
 
+    final loc = AppLocalizations.of(context);
+
     final firstName = user.userMetadata?['firstName'] ?? '';
     final lastName = user.userMetadata?['lastName'] ?? '';
     final email = user.email ?? '';
@@ -92,12 +157,12 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _currentIndex == 0
-              ? 'Главная'
-              : (_currentIndex == 1 ? 'Дела' : 'Транзакции'),
+          title: Text(
+            _currentIndex == 0
+                ? loc.home
+                : (_currentIndex == 1 ? loc.tasks : loc.transactions),
+          ),
         ),
-      ),
       drawer: Drawer(
         backgroundColor: isDark
             ? const Color(0xFF1C1C1E)
@@ -122,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
                         boxShadow: [
                           if (!isDark)
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, 4),
                             ),
@@ -186,7 +251,7 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       _buildDrawerItem(
                         icon: Icons.home_rounded,
-                        title: 'Главная',
+                        title: loc.home,
                         isDark: isDark,
                         onTap: () {
                           HapticFeedback.lightImpact();
@@ -201,7 +266,7 @@ class _MainScreenState extends State<MainScreen> {
                       _buildDivider(isDark),
                       _buildDrawerItem(
                         icon: Icons.check_circle_outline_rounded,
-                        title: 'Дела',
+                        title: loc.tasks,
                         isDark: isDark,
                         onTap: () {
                           HapticFeedback.lightImpact();
@@ -216,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
                       _buildDivider(isDark),
                       _buildDrawerItem(
                         icon: Icons.receipt_long_rounded,
-                        title: 'Транзакции',
+                        title: loc.transactions,
                         isDark: isDark,
                         onTap: () {
                           HapticFeedback.lightImpact();
@@ -231,11 +296,46 @@ class _MainScreenState extends State<MainScreen> {
                       _buildDivider(isDark),
                       _buildDrawerItem(
                         icon: Icons.edit_rounded,
-                        title: 'Изменить имя',
+                        title: loc.changeName,
                         isDark: isDark,
                         onTap: () {
                           Navigator.pop(context);
                           _showEditNameDialog();
+                        },
+                      ),
+                      _buildDivider(isDark),
+                      _buildDrawerItem(
+                        icon: Icons.language_rounded,
+                        title: loc.language,
+                        isDark: isDark,
+                        onTap: () {
+                          Navigator.pop(context);
+                          _showLanguageBottomSheet(context);
+                        },
+                      ),
+                      _buildDivider(isDark),
+                      _buildDrawerItem(
+                        icon: Icons.settings_rounded,
+                        title: loc.settings,
+                        isDark: isDark,
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (_) => const SettingsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      _buildDivider(isDark),
+                      _buildDrawerItem(
+                        icon: Icons.emoji_events_rounded,
+                        title: loc.achievements,
+                        isDark: isDark,
+                        onTap: () {
+                          Navigator.pop(context);
+                          AchievementsBottomSheet.show(context);
                         },
                       ),
                     ],
@@ -271,7 +371,7 @@ class _MainScreenState extends State<MainScreen> {
                                 ),
                                 const SizedBox(width: 16),
                                 Text(
-                                  'Тёмная тема',
+                                  loc.darkTheme,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -313,7 +413,7 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                   child: _buildDrawerItem(
                     icon: Icons.logout_rounded,
-                    title: 'Выйти',
+                    title: loc.logout,
                     isDark: isDark,
                     isDestructive: true,
                     hideChevron: true,
@@ -335,7 +435,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: PageView(
         controller: _pageController,
-        physics: const ClampingScrollPhysics(), // Smooth Apple-like scrolling
+        physics: const ClampingScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             _currentIndex = index;
@@ -343,19 +443,19 @@ class _MainScreenState extends State<MainScreen> {
         },
         children: _screens,
       ),
-      bottomNavigationBar: AppleBottomNavBar(
-        currentIndex: _currentIndex,
-        isDark: isDark,
-        onTap: (index) {
-          HapticFeedback.lightImpact();
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-      ),
-    );
+        bottomNavigationBar: AppleBottomNavBar(
+          currentIndex: _currentIndex,
+          isDark: isDark,
+          onTap: (index) {
+            HapticFeedback.lightImpact();
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+        ),
+      );
   }
 
   Widget _buildDrawerItem({
@@ -408,8 +508,8 @@ class _MainScreenState extends State<MainScreen> {
         height: 1,
         thickness: 0.5,
         color: isDark
-            ? Colors.white.withOpacity(0.1)
-            : Colors.black.withOpacity(0.05),
+            ? Colors.white.withValues(alpha: 0.1)
+            : Colors.black.withValues(alpha: 0.05),
       ),
     );
   }

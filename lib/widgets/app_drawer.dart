@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 
 class AppDrawer extends StatelessWidget {
   final Function(int) onSelect;
@@ -8,6 +9,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
 
     return Drawer(
       child: ListView(
@@ -15,22 +17,22 @@ class AppDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: theme.primaryColor),
-            child: const Text(
-              'Меню',
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            child: Text(
+              loc.menu,
+              style: const TextStyle(color: Colors.white, fontSize: 24),
             ),
           ),
           ListTile(
             leading: const Icon(Icons.home),
-            title: const Text('Главная'),
+            title: Text(loc.home),
             onTap: () {
-              onSelect(0); // переключаем экран
+              onSelect(0);
               Navigator.pop(context);
             },
           ),
           ListTile(
             leading: const Icon(Icons.receipt_long),
-            title: const Text('Транзакции'),
+            title: Text(loc.transactions),
             onTap: () {
               onSelect(1);
               Navigator.pop(context);

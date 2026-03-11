@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
 import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:money_tracker/features/transactions/presentation/bloc/transactions_event.dart';
@@ -48,6 +49,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+
     return BlocBuilder<TransactionsBloc, TransactionsState>(
       builder: (context, state) {
         return switch (state) {
@@ -60,8 +63,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
           TransactionsLoaded(items: final items) => Stack(
               children: [
                 items.isEmpty
-                    ? const Center(
-                        child: Text('Здесь будет список ваших транзакций'),
+                    ? Center(
+                        child: Text(loc.transactionsEmpty),
                       )
                     : ListView.builder(
                         itemCount: items.length,

@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TasksScreen extends StatefulWidget {
@@ -29,17 +33,20 @@ class _TasksScreenState extends State<TasksScreen> {
         ..clear()
         ..addAll(decoded.map((e) => Map<String, dynamic>.from(e)));
     });
+    _updateAchievements();
   }
 
   Future<void> _saveTasks() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('tasks', jsonEncode(tasks));
+    await _updateAchievements();
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text('Дела')),
+      appBar: AppBar(title: Text(loc.tasks)),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTaskDialog,
         child: const Icon(Icons.add),
@@ -83,7 +90,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 ),
               ),
               trailing: Text(
-                isOverdue ? "Просрочено" : "Выполнено",
+                isOverdue ? loc.taskOverdue : loc.taskDone,
                 style: TextStyle(color: isOverdue ? Colors.red : Colors.green),
               ),
             ),
@@ -93,22 +100,28 @@ class _TasksScreenState extends State<TasksScreen> {
     );
   }
 
+  Future<void> _updateAchievements() async {
+    if (!mounted) return;
+    await context.read<AchievementsCubit>().onTasksUpdated(tasks);
+  }
+
   void _showAddTaskDialog() {
     final controller = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) {
+        final loc = AppLocalizations.of(context);
         return AlertDialog(
-          title: const Text('Новая задача'),
+          title: Text(loc.newTaskTitle),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(hintText: 'Введите задачу'),
+            decoration: InputDecoration(hintText: loc.enterTask),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
+              child: Text(loc.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -121,7 +134,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 }
                 Navigator.pop(context);
               },
-              child: const Text('Добавить'),
+              child: Text(loc.add),
             ),
           ],
         );
@@ -137,16 +150,17 @@ class _TasksScreenState extends State<TasksScreen> {
     showDialog(
       context: context,
       builder: (context) {
+        final loc = AppLocalizations.of(context);
         return AlertDialog(
-          title: const Text('Редактировать задачу'),
+          title: Text(loc.editTaskTitle),
           content: TextField(
             controller: controller,
-            decoration: const InputDecoration(hintText: 'Введите задачу'),
+            decoration: InputDecoration(hintText: loc.enterTask),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Отмена'),
+              child: Text(loc.cancel),
             ),
             TextButton(
               onPressed: () {
@@ -159,7 +173,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 }
                 Navigator.pop(context);
               },
-              child: const Text('Сохранить'),
+              child: Text(loc.save),
             ),
           ],
         );

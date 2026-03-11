@@ -1,6 +1,9 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/achievements/achievements_cubit.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/features/transactions/domain/entities/transaction.dart';
 import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
 import 'package:money_tracker/features/transactions/presentation/bloc/transactions_event.dart';
@@ -36,7 +39,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     final rawText = _amountController.text.trim();
     final normalizedText = rawText.replaceAll(',', '.');
     final amount = double.tryParse(normalizedText);
@@ -64,17 +67,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       bloc.add(TransactionsEvent.addTransactionRequested(newTransaction));
     }
 
-    Navigator.pop(context, true);
+    await context
+        .read<AchievementsCubit>()
+        .onTransactionAdded(DateTime.now());
+
+    if (mounted) {
+      Navigator.pop(context, true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = widget.transaction != null;
-
+    final loc = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Редактировать расход' : 'Добавить расход'),
-      ),
+      appBar: AppBar(title: Text(loc.addExpenseTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -82,19 +88,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Сумма'),
+              decoration: InputDecoration(labelText: loc.amount),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _noteController,
-              decoration: const InputDecoration(labelText: 'Комментарий'),
+              decoration: InputDecoration(labelText: loc.note),
             ),
             const Spacer(),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: _save,
-                child: Text(isEditing ? 'Обновить' : 'Сохранить'),
+                child: Text(loc.save),
               ),
             ),
           ],
