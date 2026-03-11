@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 
 class WelcomeScreen extends StatelessWidget {
   final VoidCallback? onGetStarted;
@@ -7,6 +8,7 @@ class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key, this.onGetStarted});
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
@@ -20,7 +22,7 @@ class WelcomeScreen extends StatelessWidget {
             children: [
               const Spacer(),
 
-              Text('Привет 👋', style: theme.textTheme.displayLarge)
+              Text(loc.welcomeHello, style: theme.textTheme.displayLarge)
                   .animate()
                   .fadeIn(duration: 600.ms, delay: 200.ms)
                   .slideY(begin: 0.3, end: 0, duration: 600.ms, delay: 200.ms),
@@ -28,11 +30,11 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               Text(
-                    'Добро пожаловать в\nMoney Tracker',
+                    loc.welcomeTitle,
                     style: theme.textTheme.displayMedium?.copyWith(
                       color: isDark
-                          ? Colors.white.withOpacity(0.7)
-                          : Colors.black.withOpacity(0.7),
+                          ? Colors.white.withValues(alpha: 0.7)
+                          : Colors.black.withValues(alpha: 0.7),
                     ),
                   )
                   .animate()
@@ -42,7 +44,7 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 32),
 
               Text(
-                    'Управляйте своими финансами\nлегко и эффективно',
+                    loc.welcomeSubtitle,
                     style: theme.textTheme.bodyMedium,
                   )
                   .animate()
@@ -64,9 +66,9 @@ class WelcomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                       ),
-                      child: const Text(
-                        'Начать',
-                        style: TextStyle(
+                      child: Text(
+                        loc.getStarted,
+                        style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
                         ),

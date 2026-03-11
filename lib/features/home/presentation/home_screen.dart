@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context);
     
     return Scaffold(
       body: SafeArea(
@@ -14,7 +16,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
               Text(
-                'Главная',
+                loc.home,
                 style: theme.textTheme.displayMedium,
               ),
               const SizedBox(height: 24),
@@ -23,7 +25,7 @@ class HomeScreen extends StatelessWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    'Здесь будет ваша финансовая статистика',
+                    loc.homePlaceholder,
                     style: theme.textTheme.bodyMedium,
                     textAlign: TextAlign.center,
                   ),

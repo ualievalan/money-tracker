@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
@@ -7,9 +8,6 @@ import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 import 'package:money_tracker/features/auth/presentation/widgets/google_icon.dart';
 
 /// Login / Sign-up page.
-///
-/// Reads auth state from [AuthBloc] — no direct dependency on any service or
-/// repository. Navigation happens in [AppNavigator] via [BlocConsumer].
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -43,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -58,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     const SizedBox(height: 40),
                     Text(
-                      _isSignUp ? 'Создать аккаунт' : 'С возвращением',
+                      _isSignUp ? loc.loginSignUpTitle : loc.loginSignInTitle,
                       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             letterSpacing: -0.5,
@@ -80,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 48),
                     _buildTextField(
                       controller: _emailController,
-                      hint: 'Email',
+                      hint: loc.email,
                       icon: Icons.mail_outline,
                       keyboardType: TextInputType.emailAddress,
                       enabled: !isLoading,
@@ -88,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 16),
                     _buildTextField(
                       controller: _passwordController,
-                      hint: 'Пароль',
+                      hint: loc.password,
                       icon: Icons.lock_outline,
                       obscureText: true,
                       enabled: !isLoading,
@@ -115,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               )
                             : Text(
-                                _isSignUp ? 'Зарегистрироваться' : 'Войти',
+                                _isSignUp ? loc.signUpButton : loc.signInButton,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -195,7 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             foregroundColor: Colors.black,
                           ),
                           child: Text(
-                            _isSignUp ? 'Войти' : 'Создать аккаунт',
+                            _isSignUp ? loc.signInButton : loc.signUpButton,
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 14,
