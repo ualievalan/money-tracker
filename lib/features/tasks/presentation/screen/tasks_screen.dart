@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
+import 'package:money_tracker/core/di/injection.dart';
+import 'package:money_tracker/features/tasks/domain/entities/task_enums.dart';
 import 'package:money_tracker/features/tasks/presentation/bloc/tasks_bloc.dart';
 import 'package:money_tracker/features/tasks/presentation/bloc/tasks_event.dart';
 import 'package:money_tracker/features/tasks/presentation/bloc/tasks_state.dart';
@@ -16,7 +17,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TasksBloc(),
+      create: (_) => getIt<TasksBloc>(),
       child: Builder(
         builder: (blocContext) {
           return Scaffold(

@@ -1,77 +1,22 @@
-class TaskEntity {
-  const TaskEntity({
-    required this.id,
-    required this.title,
-    required this.isDone,
-    this.deadline,
-    this.priority = TaskPriority.medium,
-    this.reminderAt,
-    this.repeat = TaskRepeat.none,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:money_tracker/features/tasks/domain/entities/task_enums.dart';
 
-  final String id;
-  final String title;
-  final bool isDone;
-  final DateTime? deadline;
-  final TaskPriority priority;
-  final DateTime? reminderAt;
-  final TaskRepeat repeat;
+part 'task_entity.freezed.dart';
+part 'task_entity.g.dart';
 
-  TaskEntity copyWith({
-    String? id,
-    String? title,
-    bool? isDone,
+@freezed
+class TaskEntity with _$TaskEntity {
+  const factory TaskEntity({
+    required String id,
+    required String title,
+    required bool isDone,
     DateTime? deadline,
-    bool clearDeadline = false,
-    TaskPriority? priority,
+    @Default(TaskPriority.medium) TaskPriority priority,
     DateTime? reminderAt,
-    bool clearReminderAt = false,
-    TaskRepeat? repeat,
-  }) {
-    return TaskEntity(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      isDone: isDone ?? this.isDone,
-      deadline: clearDeadline ? null : (deadline ?? this.deadline),
-      priority: priority ?? this.priority,
-      reminderAt: clearReminderAt ? null : (reminderAt ?? this.reminderAt),
-      repeat: repeat ?? this.repeat,
-    );
-  }
+    @Default(TaskRepeat.none) TaskRepeat repeat,
+  }) = _TaskEntity;
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'isDone': isDone,
-        'deadline': deadline?.toIso8601String(),
-        'priority': priority.name,
-        'reminderAt': reminderAt?.toIso8601String(),
-        'repeat': repeat.name,
-      };
-
-  factory TaskEntity.fromJson(Map<String, dynamic> json) {
-    return TaskEntity(
-      id: json['id'].toString(),
-      title: json['title']?.toString() ?? '',
-      isDone: json['isDone'] == true,
-      deadline: json['deadline'] != null
-          ? DateTime.tryParse(json['deadline'].toString())
-          : null,
-      priority: TaskPriority.values.firstWhere(
-        (e) => e.name == json['priority'],
-        orElse: () => TaskPriority.medium,
-      ),
-      reminderAt: json['reminderAt'] != null
-          ? DateTime.tryParse(json['reminderAt'].toString())
-          : null,
-      repeat: TaskRepeat.values.firstWhere(
-        (e) => e.name == json['repeat'],
-        orElse: () => TaskRepeat.none,
-      ),
-    );
-  }
+  factory TaskEntity.fromJson(Map<String, dynamic> json) =>
+      _$TaskEntityFromJson(json);
 }
 
-enum TaskPriority { low, medium, high }
-
-enum TaskRepeat { none, daily, weekly, monthly }

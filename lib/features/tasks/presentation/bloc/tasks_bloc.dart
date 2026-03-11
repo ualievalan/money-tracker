@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:money_tracker/features/tasks/data/repositories/local_tasks_repository.dart';
+import 'package:injectable/injectable.dart';
 import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
+import 'package:money_tracker/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:money_tracker/features/tasks/presentation/bloc/tasks_event.dart';
 import 'package:money_tracker/features/tasks/presentation/bloc/tasks_state.dart';
 
-
+@injectable
 class TasksBloc extends Bloc<TasksEvent, TasksState> {
-  TasksBloc() : super(const TasksState(tasks: [])) {
+  TasksBloc(this._repository) : super(const TasksState(tasks: [])) {
     on<LoadTasks>(_onLoadTasks);
     on<AddTask>(_onAddTask);
     on<EditTask>(_onEditTask);
@@ -16,7 +17,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     add(LoadTasks());
   }
 
-  final LocalTasksRepository _repository = LocalTasksRepository();
+  final TasksRepository _repository;
 
   Future<void> _onLoadTasks(LoadTasks event, Emitter<TasksState> emit) async {
     final loaded = await _repository.loadTasks();

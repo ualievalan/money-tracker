@@ -1,4 +1,4 @@
-import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
+import 'package:money_tracker/features/tasks/domain/entities/task_enums.dart';
 
 abstract class TasksEvent {}
 
@@ -22,16 +22,19 @@ class AddTask extends TasksEvent {
 
 class EditTask extends TasksEvent {
   EditTask(this.index, this.title);
+
   final int index;
   final String title;
 }
 
 class ToggleTaskStatus extends TasksEvent {
   ToggleTaskStatus(this.index);
+
   final int index;
 }
 
 class DeleteTask extends TasksEvent {
   DeleteTask(this.id);
+
   final String id;
 }

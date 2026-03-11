@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:injectable/injectable.dart';
 import 'package:money_tracker/features/tasks/domain/entities/task_entity.dart';
 import 'package:money_tracker/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+@LazySingleton(as: TasksRepository)
 class LocalTasksRepository implements TasksRepository {
   static const _tasksKey = 'tasks';
 
