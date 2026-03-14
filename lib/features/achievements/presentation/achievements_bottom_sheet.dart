@@ -56,21 +56,19 @@ class AchievementsBottomSheet {
                         subtitle:
                             loc.achievementSevenDaysNoOverspendSubtitle,
                         progress: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id ==
-                                      AchievementId.sevenDaysNoOverspend,
-                                )
-                                .progress ??
-                            0,
+                            .firstWhere(
+                              (a) =>
+                                  a.id ==
+                                  AchievementId.sevenDaysNoOverspend,
+                            )
+                            .progress,
                         target: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id ==
-                                      AchievementId.sevenDaysNoOverspend,
-                                )
-                                .target ??
-                            7,
+                            .firstWhere(
+                              (a) =>
+                                  a.id ==
+                                  AchievementId.sevenDaysNoOverspend,
+                            )
+                            .target,
                       ),
                       _AchievementTile(
                         icon: Icons.star_rounded,
@@ -78,19 +76,17 @@ class AchievementsBottomSheet {
                         title: loc.achievementOneMonthInPlusTitle,
                         subtitle: loc.achievementOneMonthInPlusSubtitle,
                         progress: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id == AchievementId.oneMonthInPlus,
-                                )
-                                .progress ??
-                            0,
+                            .firstWhere(
+                              (a) =>
+                                  a.id == AchievementId.oneMonthInPlus,
+                            )
+                            .progress,
                         target: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id == AchievementId.oneMonthInPlus,
-                                )
-                                .target ??
-                            30,
+                            .firstWhere(
+                              (a) =>
+                                  a.id == AchievementId.oneMonthInPlus,
+                            )
+                            .target,
                       ),
                       _AchievementTile(
                         icon: Icons.check_circle_rounded,
@@ -98,19 +94,17 @@ class AchievementsBottomSheet {
                         title: loc.achievementTenTasksTitle,
                         subtitle: loc.achievementTenTasksSubtitle,
                         progress: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id == AchievementId.tenTasksDone,
-                                )
-                                .progress ??
-                            0,
+                            .firstWhere(
+                              (a) =>
+                                  a.id == AchievementId.tenTasksDone,
+                            )
+                            .progress,
                         target: state.achievements
-                                .firstWhere(
-                                  (a) =>
-                                      a.id == AchievementId.tenTasksDone,
-                                )
-                                .target ??
-                            10,
+                            .firstWhere(
+                              (a) =>
+                                  a.id == AchievementId.tenTasksDone,
+                            )
+                            .target,
                       ),
                       const SizedBox(height: 16),
                       ListTile(

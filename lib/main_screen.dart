@@ -5,6 +5,7 @@ import 'package:money_tracker/bottom_navigation_bar.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
 import 'package:money_tracker/core/localization/locale_cubit.dart';
 import 'package:money_tracker/core/theme/theme_cubit.dart';
+import 'package:money_tracker/features/auth/presentation/login_theme.dart';
 import 'package:money_tracker/features/achievements/presentation/achievements_bottom_sheet.dart';
 import 'package:money_tracker/features/home/presentation/home_screen.dart';
 import 'package:money_tracker/features/settings/presentation/screen/settings_screen.dart';
@@ -22,6 +23,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   late final PageController _pageController;
+  late final Future<int> _loginThemeIndexFuture;
 
   final List<Widget> _screens = [
     const HomeScreen(),
@@ -33,6 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    _loginThemeIndexFuture = loadLoginThemeIndex();
   }
 
   @override
@@ -433,15 +436,28 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ),
-      body: PageView(
-        controller: _pageController,
-        physics: const ClampingScrollPhysics(),
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
+      body: FutureBuilder<int>(
+        future: _loginThemeIndexFuture,
+        builder: (context, snapshot) {
+          final themeIndex = snapshot.data ?? 0;
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LoginThemes.all[themeIndex].gradient,
+            ),
+            child: PageView(
+              controller: _pageController,
+              physics: const ClampingScrollPhysics(),
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
+              children: _screens,
+            ),
+          );
         },
-        children: _screens,
       ),
         bottomNavigationBar: AppleBottomNavBar(
           currentIndex: _currentIndex,
