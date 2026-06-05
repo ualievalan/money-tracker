@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:money_tracker/core/bootstrap/app_bootstrap_result.dart';
+import 'package:money_tracker/core/bootstrap/app_bootstrapper.dart';
+import 'package:money_tracker/core/bootstrap/presentation/startup_failure_screen.dart';
 import 'package:money_tracker/core/achievements/achievements_cubit.dart';
 import 'package:money_tracker/core/di/injection.dart';
 import 'package:money_tracker/core/localization/app_localizations.dart';
@@ -15,7 +16,6 @@ import 'package:money_tracker/features/auth/presentation/bloc/auth_event.dart';
 import 'package:money_tracker/features/auth/presentation/bloc/auth_state.dart';
 import 'package:money_tracker/features/auth/presentation/screen/login_screen.dart';
 import 'package:money_tracker/features/transactions/presentation/bloc/transactions_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 
 import 'package:money_tracker/core/theme/app_theme.dart';
 import 'package:money_tracker/features/welcome/presentation/welcome_screen.dart';
@@ -23,22 +23,29 @@ import 'package:money_tracker/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const bootstrapper = AppBootstrapper();
+  final bootstrapResult = await bootstrapper.initialize();
 
-  await initializeDateFormatting('ru');
+  runApp(MoneyTrackerRoot(bootstrapResult: bootstrapResult));
+}
 
-  // Load environment variables from .env asset.
-  await dotenv.load(fileName: '.env');
+class MoneyTrackerRoot extends StatelessWidget {
+  const MoneyTrackerRoot({super.key, required this.bootstrapResult});
 
-  // Initialize Supabase with credentials from .env — never hardcoded.
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
+  final AppBootstrapResult bootstrapResult;
 
-  // Wire up the dependency injection graph.
-  await configureDependencies();
-
-  runApp(const MoneyTrackerApp());
+  @override
+  Widget build(BuildContext context) {
+    return switch (bootstrapResult) {
+      AppBootstrapSuccess() => const MoneyTrackerApp(),
+      AppBootstrapFailure(:final failure) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        home: StartupFailureScreen(failure: failure),
+      ),
+    };
+  }
 }
 
 class MoneyTrackerApp extends StatelessWidget {
@@ -51,21 +58,13 @@ class MoneyTrackerApp extends StatelessWidget {
           create: (_) =>
               getIt<AuthBloc>()..add(const AuthEvent.authStateChanged()),
         ),
-        BlocProvider(
-          create: (_) => ThemeCubit(),
-        ),
-        BlocProvider(
-          create: (_) => LocaleCubit(),
-        ),
-        BlocProvider(
-          create: (_) => SettingsCubit(),
-        ),
+        BlocProvider(create: (_) => ThemeCubit()),
+        BlocProvider(create: (_) => LocaleCubit()),
+        BlocProvider(create: (_) => SettingsCubit()),
         BlocProvider(
           create: (_) => AchievementsCubit()..checkStreaksOnAppStart(),
         ),
-        BlocProvider(
-          create: (_) => getIt<TransactionsBloc>(),
-        ),
+        BlocProvider(create: (_) => getIt<TransactionsBloc>()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
@@ -77,10 +76,7 @@ class MoneyTrackerApp extends StatelessWidget {
                     AppTheme.lightTheme,
                     settings,
                   );
-                  final dark = _applyTextSettings(
-                    AppTheme.darkTheme,
-                    settings,
-                  );
+                  final dark = _applyTextSettings(AppTheme.darkTheme, settings);
 
                   return MaterialApp(
                     title: 'Money Tracker',
@@ -100,8 +96,7 @@ class MoneyTrackerApp extends StatelessWidget {
                       final mediaQuery = MediaQuery.of(context);
                       return MediaQuery(
                         data: mediaQuery.copyWith(
-                          textScaler:
-                              TextScaler.linear(settings.fontScale),
+                          textScaler: TextScaler.linear(settings.fontScale),
                         ),
                         child: child ?? const SizedBox.shrink(),
                       );

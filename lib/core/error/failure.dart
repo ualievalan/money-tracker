@@ -28,6 +28,13 @@ final class CacheFailure extends Failure {
   const CacheFailure([super.message = 'Ошибка локального кэша.']);
 }
 
+/// Returned when required local app configuration is missing or invalid.
+final class ConfigurationFailure extends Failure {
+  const ConfigurationFailure([
+    super.message = 'Application configuration is invalid.',
+  ]);
+}
+
 /// Fallback — should never appear in production. Indicates a programming error.
 final class UnexpectedFailure extends Failure {
   const UnexpectedFailure([super.message = 'Неожиданная ошибка.']);
